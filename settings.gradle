@@ -6,3 +6,4 @@ pluginManagement {
     }
 }
 rootProject.name = 'notch'
+include 'modules:ceramic-dev'
