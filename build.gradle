@@ -4,6 +4,7 @@ plugins {
     id 'java'
     id 'org.springframework.experimental.aot' version '0.10.2'
     id 'org.graalvm.buildtools.native' version '0.9.1'
+    id "org.openjfx.javafxplugin" version "0.0.10"
 }
 
 group = 'com.ptumulty'
@@ -22,18 +23,23 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:2.5.3'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools:2.5.3'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.5.3'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.3'
 
     implementation project("modules:ceramic-dev")
 }
 
 test {
     useJUnitPlatform()
+}
+
+javafx {
+    version = '15.0.1'
+    modules = ['javafx.controls']
 }
 
 bootBuildImage {
