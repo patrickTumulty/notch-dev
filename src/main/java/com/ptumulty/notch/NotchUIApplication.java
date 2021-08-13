@@ -1,5 +1,7 @@
 package com.ptumulty.notch;
 
+import com.ptumulty.ceramic.components.BooleanComponent;
+import com.ptumulty.ceramic.models.BooleanModel;
 import com.ptumulty.notch.Checklist.Checklist;
 import com.ptumulty.notch.Checklist.ChecklistCategory;
 import com.ptumulty.notch.Checklist.ChecklistUtils;
@@ -45,7 +47,7 @@ public class NotchUIApplication extends Application
         ChecklistCategoryListItem tableItem = new ChecklistCategoryListItem(category);
 
         ExtendedChecklistTableView extendedChecklistTableView = new ExtendedChecklistTableView();
-        extendedChecklistTableView.onContextChange(tableItem);
+        extendedChecklistTableView.setChecklistCategoryListItem(tableItem);
 
         extendedChecklistTableView.setPrefSize(500, 500);
 

@@ -1,8 +1,8 @@
 package com.ptumulty.notch.ChecklistUI;
 
+import com.ptumulty.ceramic.components.BooleanComponent;
 import javafx.beans.property.BooleanProperty;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class ExtendedChecklistTableView extends TableView<ChecklistTableItem>
 {
-    private Map<String, TableColumn<ChecklistTableItem, Boolean>> columnMap;
+    private Map<String, TableColumn<ChecklistTableItem, ChecklistTableItem>> columnMap;
     private ChecklistCategoryListItem checklistCategoryListItem;
 
     public ExtendedChecklistTableView()
@@ -39,22 +39,22 @@ public class ExtendedChecklistTableView extends TableView<ChecklistTableItem>
 
     private void configureTaskColumns(String taskName)
     {
-        TableColumn<ChecklistTableItem, Boolean> checklistTaskColumn = new TableColumn<>(taskName);
+        TableColumn<ChecklistTableItem, ChecklistTableItem> checklistTaskColumn = new TableColumn<>(taskName);
         checklistTaskColumn.setSortable(false);
-        checklistTaskColumn.setCellValueFactory(param ->
-                                                {
-                                                    Optional<BooleanProperty> booleanProperty =
-                                                            param.getValue().getTaskBooleanProperty(taskName);
-                                                    return booleanProperty.orElse(null);
-                                                });
+        checklistTaskColumn.setCellValueFactory(TableColumn.CellDataFeatures::getValue);
+        checklistTaskColumn.setCellFactory(param -> new CheckableTableCell(taskName));
         getColumns().add(checklistTaskColumn);
         columnMap.put(taskName, checklistTaskColumn);
     }
 
-    public void onContextChange(ChecklistCategoryListItem checklistCategoryListItem)
+    public void setChecklistCategoryListItem(ChecklistCategoryListItem checklistCategoryListItem)
     {
         this.checklistCategoryListItem = checklistCategoryListItem;
+        onContextChange(this.checklistCategoryListItem);
+    }
 
+    private void onContextChange(ChecklistCategoryListItem checklistCategoryListItem)
+    {
         assembleTaskColumns();
 
         disposeTable();
@@ -66,7 +66,7 @@ public class ExtendedChecklistTableView extends TableView<ChecklistTableItem>
 
     private void assembleTaskColumns()
     {
-        for (ChecklistTableItem checklist : this.checklistCategoryListItem.getChecklists())
+        for (ChecklistTableItem checklist : checklistCategoryListItem.getChecklists())
         {
             for (String columnTitle : checklist.getChecklist().getChecklistItemNames())
             {
@@ -85,5 +85,39 @@ public class ExtendedChecklistTableView extends TableView<ChecklistTableItem>
         checklistNameColumn.setSortable(false);
         checklistNameColumn.setCellValueFactory(param -> param.getValue().titleProperty());
         getColumns().add(checklistNameColumn);
+    }
+
+    private class CheckableTableCell extends TableCell<ChecklistTableItem, ChecklistTableItem>
+    {
+        private final String name;
+
+        CheckableTableCell(String name)
+        {
+            this.name = name;
+        }
+
+        @Override
+        protected void updateItem(ChecklistTableItem item, boolean empty)
+        {
+            super.updateItem(item, empty);
+
+            if (empty || item == null)
+            {
+                setText(null);
+                setGraphic(null);
+            }
+            else
+            {
+                Optional<BooleanComponent> booleanComponent = item.getTaskBooleanComponent(name);
+                if (booleanComponent.isPresent())
+                {
+                    setGraphic(booleanComponent.get().getRenderer());
+                }
+                else
+                {
+                    setGraphic(new Label("n/a"));
+                }
+            }
+        }
     }
 }
