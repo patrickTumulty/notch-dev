@@ -1,7 +1,7 @@
 package com.ptumulty.notch.ChecklistUI;
 
-import com.ptumulty.notch.Checklist.ChecklistItem;
-import com.ptumulty.notch.Checklist.ChecklistTask;
+import com.ptumulty.ceramic.models.BooleanModel;
+import com.ptumulty.notch.Checklist.Checklist;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,18 +13,20 @@ import java.util.Optional;
 
 public class ChecklistTableItem
 {
-    public ChecklistItem checklist;
+    public Checklist checklist;
     private StringProperty title;
     private Map<String, BooleanProperty> checklistTasks;
 
-    ChecklistTableItem(ChecklistItem checklist)
+    public ChecklistTableItem(Checklist checklist)
     {
+        this.checklist = checklist;
         title = new SimpleStringProperty(checklist.getName().getValue());
         checklistTasks = new HashMap<>();
-        for (ChecklistTask task : checklist.getChecklistTasksSnapshot())
+        for (String itemName : checklist.getChecklistItemNames())
         {
-            checklistTasks.put(task.getTaskName().getValue(),
-                               new SimpleBooleanProperty(task.getCompletionStatus().getValue()));
+            Optional<BooleanModel> checkedState = checklist.getItemCheckedState(itemName);
+            checkedState.ifPresent(booleanModel ->
+                    checklistTasks.put(itemName, new SimpleBooleanProperty(booleanModel.getValue())));
         }
     }
 
@@ -33,7 +35,7 @@ public class ChecklistTableItem
         return title;
     }
 
-    public ChecklistItem getChecklistItem()
+    public Checklist getChecklist()
     {
         return checklist;
     }

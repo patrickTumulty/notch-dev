@@ -1,8 +1,6 @@
 package com.ptumulty.notch.ChecklistUI;
 
-import com.ptumulty.notch.Checklist.ChecklistTask;
 import javafx.beans.property.BooleanProperty;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -15,23 +13,34 @@ public class ExtendedChecklistTableView extends TableView<ChecklistTableItem>
     private Map<String, TableColumn<ChecklistTableItem, Boolean>> columnMap;
     private ChecklistCategoryListItem checklistCategoryListItem;
 
-    ExtendedChecklistTableView()
+    public ExtendedChecklistTableView()
     {
         columnMap = new HashMap<>();
 
+        buildTable();
+    }
+
+    private void disposeTable()
+    {
+        getColumns().clear();
+    }
+
+    private void buildTable()
+    {
         configureNameColumn();
         for (String taskName : columnMap.keySet())
         {
             if (columnMap.get(taskName) == null)
             {
-                configureTaskColumn(taskName);
+                configureTaskColumns(taskName);
             }
         }
     }
 
-    private void configureTaskColumn(String taskName)
+    private void configureTaskColumns(String taskName)
     {
-        TableColumn<ChecklistTableItem, Boolean> checklistTaskColumn = new TableColumn<>();
+        TableColumn<ChecklistTableItem, Boolean> checklistTaskColumn = new TableColumn<>(taskName);
+        checklistTaskColumn.setSortable(false);
         checklistTaskColumn.setCellValueFactory(param ->
                                                 {
                                                     Optional<BooleanProperty> booleanProperty =
@@ -42,11 +51,15 @@ public class ExtendedChecklistTableView extends TableView<ChecklistTableItem>
         columnMap.put(taskName, checklistTaskColumn);
     }
 
-    public void setChecklistCategories(ChecklistCategoryListItem checklistCategoryListItem)
+    public void onContextChange(ChecklistCategoryListItem checklistCategoryListItem)
     {
         this.checklistCategoryListItem = checklistCategoryListItem;
 
         assembleTaskColumns();
+
+        disposeTable();
+
+        buildTable();
 
         setItems(checklistCategoryListItem.getChecklists());
     }
@@ -55,11 +68,11 @@ public class ExtendedChecklistTableView extends TableView<ChecklistTableItem>
     {
         for (ChecklistTableItem checklist : this.checklistCategoryListItem.getChecklists())
         {
-            for (ChecklistTask checklistTask : checklist.getChecklistItem().getChecklistTasksSnapshot())
+            for (String columnTitle : checklist.getChecklist().getChecklistItemNames())
             {
-                if (!columnMap.containsKey(checklistTask.getTaskName().getValue()))
+                if (!columnMap.containsKey(columnTitle))
                 {
-                    columnMap.put(checklistTask.getTaskName().getValue(), null);
+                    columnMap.put(columnTitle, null);
                 }
             }
         }
@@ -67,8 +80,9 @@ public class ExtendedChecklistTableView extends TableView<ChecklistTableItem>
 
     private void configureNameColumn()
     {
-        TableColumn<ChecklistTableItem, String> checklistNameColumn = new TableColumn<>();
+        TableColumn<ChecklistTableItem, String> checklistNameColumn = new TableColumn<>("Item Name");
         checklistNameColumn.setEditable(false);
+        checklistNameColumn.setSortable(false);
         checklistNameColumn.setCellValueFactory(param -> param.getValue().titleProperty());
         getColumns().add(checklistNameColumn);
     }

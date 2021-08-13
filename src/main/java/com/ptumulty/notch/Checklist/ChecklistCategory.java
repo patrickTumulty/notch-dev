@@ -6,7 +6,7 @@ import com.ptumulty.ceramic.models.StringModel;
 public class ChecklistCategory
 {
     private final StringModel categoryTitle;
-    private final ListModel<ChecklistItem> checklists;
+    private final ListModel<Checklist> checklists;
 
     public ChecklistCategory(String categoryTitle)
     {
@@ -19,7 +19,7 @@ public class ChecklistCategory
         return categoryTitle;
     }
 
-    public ListModel<ChecklistItem> getChecklists()
+    public ListModel<Checklist> getChecklists()
     {
         return checklists;
     }

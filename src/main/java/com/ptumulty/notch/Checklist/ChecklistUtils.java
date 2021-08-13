@@ -4,12 +4,12 @@ public class ChecklistUtils
 {
     public static void printChecklistFromCategory(ChecklistCategory category)
     {
-        for (ChecklistItem checklist : category.getChecklists().getListItems())
+        for (Checklist checklist : category.getChecklists().getListItems())
         {
             System.out.println(checklist);
-            for (ChecklistTask checklistItem : checklist.getChecklistTasks().getListItems())
+            for (String itemName : checklist.getChecklistItemNames())
             {
-                System.out.println("\t" + checklistItem);
+                System.out.println("\t" + itemName);
             }
         }
     }
