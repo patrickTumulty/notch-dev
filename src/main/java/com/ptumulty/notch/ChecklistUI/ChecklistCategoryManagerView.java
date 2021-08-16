@@ -1,18 +1,24 @@
 package com.ptumulty.notch.ChecklistUI;
 
 import com.ptumulty.notch.AppContext;
+import com.ptumulty.notch.Checklist.ChecklistCategory;
 import com.ptumulty.notch.Checklist.ChecklistCategoryManager;
 import com.ptumulty.notch.Checklist.ChecklistCategoryManagerImpl;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ChecklistCategoryManagerView extends BorderPane
 {
@@ -40,20 +46,39 @@ public class ChecklistCategoryManagerView extends BorderPane
 
     private class NameCategoryPopup
     {
+        private Stage stage;
+        private VBox vBox;
+        private TextArea defaultChecklistItems;
+
         NameCategoryPopup()
         {
-            Stage stage = new Stage();
-            stage.setTitle("Create Category");
-            stage.initModality(Modality.APPLICATION_MODAL);
+            confiigureStage();
 
-            VBox vBox = new VBox();
-            vBox.setSpacing(10);
-            vBox.setPadding(new Insets(10));
-            vBox.setAlignment(Pos.CENTER);
+            configureVBox();
 
             TextField categoryNameField = new TextField();
             categoryNameField.setPromptText("Title...");
+            vBox.getChildren().add(categoryNameField);
 
+            defaultChecklistItems = new TextArea();
+            vBox.getChildren().add(defaultChecklistItems);
+
+            configureButtons(categoryNameField);
+
+            stage.setScene(new Scene(vBox, 300, 300));
+            stage.show();
+        }
+
+        private void configureVBox()
+        {
+            vBox = new VBox();
+            vBox.setSpacing(10);
+            vBox.setPadding(new Insets(10));
+            vBox.setAlignment(Pos.CENTER);
+        }
+
+        private void configureButtons(TextField categoryNameField)
+        {
             Button createButton = new Button("Create");
             createButton.setOnAction(event ->
             {
@@ -63,9 +88,12 @@ public class ChecklistCategoryManagerView extends BorderPane
 
                 try
                 {
-                    AppContext.get()
-                              .getBean(ChecklistCategoryManager.class)
-                              .createAndAddChecklistCategory(categoryName);
+                    ChecklistCategory checklistCategory = new ChecklistCategory(categoryName);
+
+                    List<String> defaults = Arrays.stream(
+                            defaultChecklistItems.getText().split("\n")).map(String::strip).collect(Collectors.toList());
+                    checklistCategory.setDefaultChecklistItems(defaults);
+                    AppContext.get().getBean(ChecklistCategoryManager.class).addChecklistCategory(checklistCategory);
                 }
                 catch (ChecklistCategoryManagerImpl.CategoryAlreadyExistsException e)
                 {
@@ -77,16 +105,18 @@ public class ChecklistCategoryManagerView extends BorderPane
             Button cancelButton = new Button("Cancel");
             cancelButton.setOnAction(event -> stage.close());
 
-            vBox.getChildren().add(categoryNameField);
-
             HBox hBox = new HBox(cancelButton, createButton);
             hBox.setAlignment(Pos.CENTER);
             hBox.setSpacing(10);
 
             vBox.getChildren().add(hBox);
+        }
 
-            stage.setScene(new Scene(vBox, 300, 100));
-            stage.show();
+        private void confiigureStage()
+        {
+            stage = new Stage();
+            stage.setTitle("Create Category");
+            stage.initModality(Modality.APPLICATION_MODAL);
         }
 
     }
