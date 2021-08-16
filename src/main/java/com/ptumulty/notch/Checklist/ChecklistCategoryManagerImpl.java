@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChecklistManagerImpl implements ChecklistManager
+public class ChecklistCategoryManagerImpl implements ChecklistCategoryManager
 {
     private final Map<String, ChecklistCategory> checklistCategoriesMap;
     private final List<ChecklistManagerListener> listeners;
 
-    public ChecklistManagerImpl()
+    public ChecklistCategoryManagerImpl()
     {
         checklistCategoriesMap = new HashMap<>();
         listeners = new ArrayList<>();

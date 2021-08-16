@@ -3,20 +3,20 @@ package com.ptumulty.notch.ChecklistUI;
 import com.ptumulty.ceramic.utility.Disposable;
 import com.ptumulty.notch.AppContext;
 import com.ptumulty.notch.Checklist.ChecklistCategory;
-import com.ptumulty.notch.Checklist.ChecklistManager;
+import com.ptumulty.notch.Checklist.ChecklistCategoryManager;
 import javafx.scene.control.ListView;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChecklistCategoryListView extends ListView<ChecklistCategoryListItemView> implements
-        ChecklistManager.ChecklistManagerListener, Disposable
+        ChecklistCategoryManager.ChecklistManagerListener, Disposable
 {
     private final Map<ChecklistCategory, ChecklistCategoryListItemView> categoryModelToViewMap;
 
     public ChecklistCategoryListView()
     {
-        AppContext.get().getBean(ChecklistManager.class).addListener(this);
+        AppContext.get().getBean(ChecklistCategoryManager.class).addListener(this);
 
         categoryModelToViewMap = new HashMap<>();
     }
@@ -39,6 +39,6 @@ public class ChecklistCategoryListView extends ListView<ChecklistCategoryListIte
     @Override
     public void dispose()
     {
-        AppContext.get().getBean(ChecklistManager.class).removeListener(this);
+        AppContext.get().getBean(ChecklistCategoryManager.class).removeListener(this);
     }
 }

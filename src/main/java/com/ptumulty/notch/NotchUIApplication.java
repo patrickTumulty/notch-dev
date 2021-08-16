@@ -1,8 +1,6 @@
 package com.ptumulty.notch;
 
 import com.ptumulty.notch.Checklist.*;
-import com.ptumulty.notch.ChecklistUI.ChecklistCategoryListItem;
-import com.ptumulty.notch.ChecklistUI.ExtendedChecklistTableView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -44,9 +42,9 @@ public class NotchUIApplication extends Application
 
         try
         {
-            AppContext.get().getBean(ChecklistManager.class).addChecklistCategory(category);
+            AppContext.get().getBean(ChecklistCategoryManager.class).addChecklistCategory(category);
         }
-        catch (ChecklistManagerImpl.CategoryAlreadyExistsException e)
+        catch (ChecklistCategoryManagerImpl.CategoryAlreadyExistsException e)
         {
             System.out.println("Print Stuff");
         }

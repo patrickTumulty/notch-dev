@@ -1,7 +1,7 @@
 package com.ptumulty.notch;
 
-import com.ptumulty.notch.Checklist.ChecklistManager;
-import com.ptumulty.notch.Checklist.ChecklistManagerImpl;
+import com.ptumulty.notch.Checklist.ChecklistCategoryManager;
+import com.ptumulty.notch.Checklist.ChecklistCategoryManagerImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Configuration;
 public class NotchApplicationConfiguration
 {
     @Bean
-    public ChecklistManager checklistManager()
+    public ChecklistCategoryManager checklistCategoryManager()
     {
-        return new ChecklistManagerImpl();
+        return new ChecklistCategoryManagerImpl();
     }
 
 }

@@ -1,7 +1,7 @@
 package com.ptumulty.notch;
 
-import com.ptumulty.notch.Checklist.ChecklistManager;
-import com.ptumulty.notch.Checklist.ChecklistManagerImpl;
+import com.ptumulty.notch.Checklist.ChecklistCategoryManager;
+import com.ptumulty.notch.Checklist.ChecklistCategoryManagerImpl;
 import com.ptumulty.notch.ChecklistUI.ChecklistCategoryListView;
 import com.ptumulty.notch.ChecklistUI.ExtendedChecklistTableView;
 import javafx.scene.control.Button;
@@ -27,9 +27,9 @@ public class MainPanel extends BorderPane
         button.setOnAction(event ->
         {
             try {
-                AppContext.get().getBean(ChecklistManager.class).createAndAddChecklistCategory("Test " + count);
+                AppContext.get().getBean(ChecklistCategoryManager.class).createAndAddChecklistCategory("Test " + count);
                 count++;
-            } catch (ChecklistManagerImpl.CategoryAlreadyExistsException e) {
+            } catch (ChecklistCategoryManagerImpl.CategoryAlreadyExistsException e) {
                 System.out.println("Already Exists");
             }
         });
