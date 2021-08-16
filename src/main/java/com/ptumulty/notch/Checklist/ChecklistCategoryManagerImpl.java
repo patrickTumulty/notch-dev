@@ -26,9 +26,8 @@ public class ChecklistCategoryManagerImpl implements ChecklistCategoryManager
         }
         else
         {
-            throw new CategoryAlreadyExistsException("A Checklist category with the title " +
-                    category.getCategoryTitle() +
-                    "already exists");
+            throw new CategoryAlreadyExistsException(
+                    "A Checklist category with the title " + category.getCategoryTitle() + "already exists");
         }
     }
 
@@ -53,7 +52,7 @@ public class ChecklistCategoryManagerImpl implements ChecklistCategoryManager
     public void removeChecklistCategory(String name)
     {
         notifyCategoryRemoved(checklistCategoriesMap.get(name));
-        checklistCategoriesMap.remove(name);
+         checklistCategoriesMap.remove(name);
     }
 
     private void notifyCategoryRemoved(ChecklistCategory category)

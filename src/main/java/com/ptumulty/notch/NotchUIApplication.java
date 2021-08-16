@@ -36,9 +36,8 @@ public class NotchUIApplication extends Application
         category.getChecklists().addItem(checklist1);
         category.getChecklists().addItem(checklist2);
 
-        ChecklistUtils.printChecklistFromCategory(category);
-
         Scene scene = new Scene(new MainPanel());
+        scene.getStylesheets().add("css/main-panel.css");
 
         try
         {
@@ -50,6 +49,9 @@ public class NotchUIApplication extends Application
         }
 
         primaryStage.setScene(scene);
+
+        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(600);
         primaryStage.show();
     }
 }

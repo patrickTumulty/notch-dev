@@ -2,7 +2,7 @@ package com.ptumulty.notch.Checklist;
 
 public interface ChecklistCategoryManager
 {
-    void addChecklistCategory(ChecklistCategory name) throws ChecklistCategoryManagerImpl.CategoryAlreadyExistsException;
+    void addChecklistCategory(ChecklistCategory category) throws ChecklistCategoryManagerImpl.CategoryAlreadyExistsException;
 
     void removeChecklistCategory(ChecklistCategory name);
 
