@@ -14,6 +14,11 @@ public class ChecklistCategoryListItemView extends HBox
         configureVisuals();
     }
 
+    public ChecklistCategoryListItem getCategoryListItem()
+    {
+        return categoryListItem;
+    }
+
     private void configureVisuals()
     {
         getChildren().add(new Label(categoryListItem.getCategoryTitle()));

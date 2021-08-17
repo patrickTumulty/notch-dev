@@ -2,12 +2,7 @@ package com.ptumulty.notch.ChecklistUI;
 
 import com.ptumulty.ceramic.components.BooleanComponent;
 import com.ptumulty.ceramic.models.BooleanModel;
-import com.ptumulty.ceramic.models.ValueModel;
 import com.ptumulty.notch.Checklist.Checklist;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValueBase;
@@ -25,7 +20,7 @@ public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem>
     public ChecklistTableItem(Checklist checklist)
     {
         this.checklist = checklist;
-        title = new SimpleStringProperty(checklist.getName().getValue());
+        title = new SimpleStringProperty(checklist.getName().get());
         checklistTasks = new HashMap<>();
 
         populateChecklistTasks();
@@ -33,7 +28,7 @@ public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem>
 
     private void populateChecklistTasks()
     {
-        for (String itemName : checklist.getChecklistItemNames())
+        for (String itemName : checklist.getChecklistTaskNames())
         {
             Optional<BooleanModel> checkedState = checklist.getItemCheckedState(itemName);
             checkedState.ifPresent(booleanModel ->

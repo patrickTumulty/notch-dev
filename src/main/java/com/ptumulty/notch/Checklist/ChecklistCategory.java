@@ -12,20 +12,55 @@ public class ChecklistCategory
     private final StringModel categoryTitle;
     private final ListModel<Checklist> checklists;
 
-    private final ListModel<String> defaultChecklistItems;
+    private final ListModel<String> defaultChecklistTasks;
     private final ListModel<String> additionalChecklistItems;
 
     public ChecklistCategory(String categoryTitle)
     {
         this.categoryTitle = new StringModel(categoryTitle);
         checklists = new ListModel<>();
-        defaultChecklistItems = new ListModel<>();
+        checklists.addListListener(new ListModel.ListModelListener()
+        {
+            @Override
+            public void itemAdded(Object item)
+            {
+                updateChecklists();
+            }
+
+            @Override
+            public void itemRemoved(Object item)
+            {
+                /*
+                 * Do Nothing
+                 */
+            }
+
+            @Override
+            public void listChanged()
+            {
+                if (checklists.get().size() != 0)
+                {
+                    updateChecklists();
+                }
+            }
+        });
+
+        defaultChecklistTasks = new ListModel<>();
         additionalChecklistItems = new ListModel<>();
     }
 
-    public void setDefaultChecklistItems(List<String> items)
+    public void setDefaultChecklistTasks(List<String> items)
     {
-        defaultChecklistItems.setList(items);
+        defaultChecklistTasks.setList(items);
+        updateChecklists();
+    }
+
+    private void updateChecklists()
+    {
+        for (Checklist checklist : checklists.get())
+        {
+            checklist.addNewChecklistItems(defaultChecklistTasks.get());
+        }
     }
 
     public void addAdditionalChecklistItems(List<String> items)
@@ -35,7 +70,7 @@ public class ChecklistCategory
 
     public List<String> getDefaultChecklistItemsSnapshot()
     {
-        return new ArrayList<>(List.copyOf(defaultChecklistItems.getItemsSnapshot()));
+        return new ArrayList<>(List.copyOf(defaultChecklistTasks.getItemsSnapshot()));
     }
 
     public List<String> getAdditionalChecklistItemsSnapshot()
@@ -45,7 +80,7 @@ public class ChecklistCategory
 
     public String getCategoryTitle()
     {
-        return categoryTitle.getValue();
+        return categoryTitle.get();
     }
 
     public StringModel getCategoryTitleModel()
@@ -67,7 +102,7 @@ public class ChecklistCategory
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChecklistCategory category = (ChecklistCategory) o;
-        return categoryTitle.getValue().equals(category.categoryTitle.getValue());
+        return categoryTitle.get().equals(category.categoryTitle.get());
     }
 
     /**
@@ -76,7 +111,7 @@ public class ChecklistCategory
     @Override
     public int hashCode()
     {
-        return Objects.hash(categoryTitle.getValue());
+        return Objects.hash(categoryTitle.get());
     }
 
     /**

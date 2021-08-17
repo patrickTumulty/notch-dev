@@ -28,7 +28,8 @@ public class Checklist
         if (!checklistItems.containsKey(itemName))
         {
             checklistItems.put(itemName, new BooleanModel(false));
-        }    }
+        }
+    }
 
     public void addNewChecklistItems(List<String> itemNames)
     {
@@ -41,7 +42,7 @@ public class Checklist
         }
     }
 
-    public List<String> getChecklistItemNames()
+    public List<String> getChecklistTaskNames()
     {
         return new ArrayList<>(List.copyOf(checklistItems.keySet()));
     }

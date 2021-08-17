@@ -1,5 +1,6 @@
 package com.ptumulty.notch.ChecklistUI;
 
+import com.ptumulty.ceramic.utility.StringUtils;
 import com.ptumulty.notch.AppContext;
 import com.ptumulty.notch.Checklist.ChecklistCategory;
 import com.ptumulty.notch.Checklist.ChecklistCategoryManager;
@@ -16,9 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ChecklistCategoryManagerView extends BorderPane
 {
@@ -38,6 +37,11 @@ public class ChecklistCategoryManagerView extends BorderPane
         configureVisuals();
     }
 
+    public ChecklistCategoryListView getListView()
+    {
+        return checklistCategoryListView;
+    }
+
     private void configureVisuals()
     {
         setTop(topBar);
@@ -49,21 +53,22 @@ public class ChecklistCategoryManagerView extends BorderPane
         private Stage stage;
         private VBox vBox;
         private TextArea defaultChecklistItems;
+        private TextField categoryNameField;
 
         NameCategoryPopup()
         {
-            confiigureStage();
+            configureStage();
 
             configureVBox();
 
-            TextField categoryNameField = new TextField();
+            categoryNameField = new TextField();
             categoryNameField.setPromptText("Title...");
             vBox.getChildren().add(categoryNameField);
 
             defaultChecklistItems = new TextArea();
             vBox.getChildren().add(defaultChecklistItems);
 
-            configureButtons(categoryNameField);
+            configureButtons();
 
             stage.setScene(new Scene(vBox, 300, 300));
             stage.show();
@@ -77,30 +82,10 @@ public class ChecklistCategoryManagerView extends BorderPane
             vBox.setAlignment(Pos.CENTER);
         }
 
-        private void configureButtons(TextField categoryNameField)
+        private void configureButtons()
         {
             Button createButton = new Button("Create");
-            createButton.setOnAction(event ->
-            {
-                String categoryName = categoryNameField.getText().isBlank() ?
-                                      "Untitled" :
-                                      categoryNameField.getText();
-
-                try
-                {
-                    ChecklistCategory checklistCategory = new ChecklistCategory(categoryName);
-
-                    List<String> defaults = Arrays.stream(
-                            defaultChecklistItems.getText().split("\n")).map(String::strip).collect(Collectors.toList());
-                    checklistCategory.setDefaultChecklistItems(defaults);
-                    AppContext.get().getBean(ChecklistCategoryManager.class).addChecklistCategory(checklistCategory);
-                }
-                catch (ChecklistCategoryManagerImpl.CategoryAlreadyExistsException e)
-                {
-                    System.out.println("Already Exists");
-                }
-                stage.close();
-            });
+            createButton.setOnAction(event -> createCategory());
 
             Button cancelButton = new Button("Cancel");
             cancelButton.setOnAction(event -> stage.close());
@@ -112,7 +97,30 @@ public class ChecklistCategoryManagerView extends BorderPane
             vBox.getChildren().add(hBox);
         }
 
-        private void confiigureStage()
+        private void createCategory()
+        {
+            String categoryName = categoryNameField.getText().isBlank() ?
+                                  "Untitled" :
+                                  categoryNameField.getText();
+
+            try
+            {
+                ChecklistCategory checklistCategory = new ChecklistCategory(categoryName);
+
+                List<String> defaults = StringUtils.parseMultilineStringToList(defaultChecklistItems.getText());
+                checklistCategory.setDefaultChecklistTasks(defaults);
+                AppContext.get().getBean(ChecklistCategoryManager.class).addChecklistCategory(checklistCategory);
+            }
+            catch (ChecklistCategoryManagerImpl.CategoryAlreadyExistsException e)
+            {
+                /*
+                TODO: Check here for how many of this already existing name shows up and append a number at the end.
+                 */
+            }
+            stage.close();
+        }
+
+        private void configureStage()
         {
             stage = new Stage();
             stage.setTitle("Create Category");

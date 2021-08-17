@@ -1,6 +1,7 @@
 package com.ptumulty.notch.ChecklistUI;
 
 import com.ptumulty.ceramic.components.BooleanComponent;
+import com.ptumulty.ceramic.components.ListSelectionListener;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -10,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class ExtendedChecklistTableView extends TableView<ChecklistTableItem>
+public class ExtendedChecklistTableView extends TableView<ChecklistTableItem> implements ListSelectionListener<ChecklistCategoryListItemView>
 {
     private Map<String, TableColumn<ChecklistTableItem, ChecklistTableItem>> columnMap;
     private ChecklistCategoryListItem checklistCategoryListItem;
@@ -70,7 +71,7 @@ public class ExtendedChecklistTableView extends TableView<ChecklistTableItem>
     {
         for (ChecklistTableItem checklist : checklistCategoryListItem.getChecklists())
         {
-            for (String columnTitle : checklist.getChecklist().getChecklistItemNames())
+            for (String columnTitle : checklist.getChecklist().getChecklistTaskNames())
             {
                 if (!columnMap.containsKey(columnTitle))
                 {
@@ -87,6 +88,12 @@ public class ExtendedChecklistTableView extends TableView<ChecklistTableItem>
         checklistNameColumn.setSortable(false);
         checklistNameColumn.setCellValueFactory(param -> param.getValue().titleProperty());
         getColumns().add(checklistNameColumn);
+    }
+
+    @Override
+    public void itemSelected(ChecklistCategoryListItemView selectedItem)
+    {
+        setChecklistCategoryListItem(selectedItem.getCategoryListItem());
     }
 
     private class CheckableTableCell extends TableCell<ChecklistTableItem, ChecklistTableItem>

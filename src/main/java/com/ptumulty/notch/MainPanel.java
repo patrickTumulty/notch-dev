@@ -1,8 +1,14 @@
 package com.ptumulty.notch;
 
+import com.ptumulty.notch.Checklist.Checklist;
+import com.ptumulty.notch.Checklist.ChecklistCategory;
+import com.ptumulty.notch.Checklist.ChecklistCategoryManager;
+import com.ptumulty.notch.Checklist.ChecklistCategoryManagerImpl;
 import com.ptumulty.notch.ChecklistUI.ChecklistCategoryManagerView;
 import com.ptumulty.notch.ChecklistUI.ExtendedChecklistTableView;
 import javafx.scene.layout.BorderPane;
+
+import java.util.List;
 
 public class MainPanel extends BorderPane
 {
@@ -22,7 +28,34 @@ public class MainPanel extends BorderPane
         setPrefSize(PREF_WIDTH, PREF_HEIGHT);
         setMinSize(MIN_WIDTH, MIN_HEIGHT);
 
+        categoryManagerView.getListView().addListener(extendedChecklistTableView);
+
         configureLayout();
+
+
+        DEV();
+
+    }
+
+    private void DEV()
+    {
+        ChecklistCategory category = new ChecklistCategory("Tasks Category");
+        category.setDefaultChecklistTasks(List.of("A", "B", "C"));
+
+        Checklist checklist1 = new Checklist("Task 1");
+        Checklist checklist2 = new Checklist("Task 1");
+        Checklist checklist3 = new Checklist("Task 1");
+
+        category.getChecklists().addItems(List.of(checklist1, checklist2, checklist3));
+
+        try
+        {
+            AppContext.get().getBean(ChecklistCategoryManager.class).addChecklistCategory(category);
+        }
+        catch (ChecklistCategoryManagerImpl.CategoryAlreadyExistsException ignored)
+        {
+
+        }
     }
 
     private void configureLayout()

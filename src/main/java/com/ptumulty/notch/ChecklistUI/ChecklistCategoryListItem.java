@@ -18,6 +18,11 @@ public class ChecklistCategoryListItem
         createTableItems();
     }
 
+    public ChecklistCategory getCategory()
+    {
+        return category;
+    }
+
     public String getCategoryTitle()
     {
         return category.getCategoryTitle();
