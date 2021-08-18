@@ -33,7 +33,6 @@ public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem>
             Optional<BooleanModel> checkedState = checklist.getItemCheckedState(itemName);
             checkedState.ifPresent(booleanModel ->
             {
-                booleanModel.addListener(this::propertyChange);
                 checklistTasks.put(itemName, new BooleanComponent(booleanModel));
             });
         }
@@ -54,10 +53,10 @@ public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem>
         return Optional.ofNullable(checklistTasks.get(taskName));
     }
 
-    private void propertyChange()
-    {
-        fireValueChangedEvent();
-    }
+//    private void propertyChange()
+//    {
+//        fireValueChangedEvent();
+//    }
 
     @Override
     public ChecklistTableItem getValue()

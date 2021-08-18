@@ -43,8 +43,8 @@ public class MainPanel extends BorderPane
         category.setDefaultChecklistTasks(List.of("A", "B", "C"));
 
         Checklist checklist1 = new Checklist("Task 1");
-        Checklist checklist2 = new Checklist("Task 1");
-        Checklist checklist3 = new Checklist("Task 1");
+        Checklist checklist2 = new Checklist("Task 2");
+        Checklist checklist3 = new Checklist("Task 3");
 
         category.getChecklists().addItems(List.of(checklist1, checklist2, checklist3));
 

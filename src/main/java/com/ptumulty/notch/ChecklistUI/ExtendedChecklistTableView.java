@@ -2,6 +2,7 @@ package com.ptumulty.notch.ChecklistUI;
 
 import com.ptumulty.ceramic.components.BooleanComponent;
 import com.ptumulty.ceramic.components.ListSelectionListener;
+import javafx.collections.FXCollections;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -26,6 +27,7 @@ public class ExtendedChecklistTableView extends TableView<ChecklistTableItem> im
     private void disposeTable()
     {
         getColumns().clear();
+        columnMap.clear();
     }
 
     private void buildTable()
@@ -52,19 +54,29 @@ public class ExtendedChecklistTableView extends TableView<ChecklistTableItem> im
 
     public void setChecklistCategoryListItem(ChecklistCategoryListItem checklistCategoryListItem)
     {
-        this.checklistCategoryListItem = checklistCategoryListItem;
-        onContextChange(this.checklistCategoryListItem);
+        if (this.checklistCategoryListItem != checklistCategoryListItem)
+        {
+            this.checklistCategoryListItem = checklistCategoryListItem;
+            onContextChange(this.checklistCategoryListItem);
+        }
     }
 
     private void onContextChange(ChecklistCategoryListItem checklistCategoryListItem)
     {
-        assembleTaskColumns();
-
         disposeTable();
+
+        assembleTaskColumns();
 
         buildTable();
 
-        setItems(checklistCategoryListItem.getChecklists());
+        if (checklistCategoryListItem.getChecklists().isEmpty())
+        {
+            setItems(FXCollections.emptyObservableList());
+        }
+        else
+        {
+            setItems(checklistCategoryListItem.getChecklists());
+        }
     }
 
     private void assembleTaskColumns()
