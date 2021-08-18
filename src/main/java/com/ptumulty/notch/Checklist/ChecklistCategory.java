@@ -19,16 +19,16 @@ public class ChecklistCategory
     {
         this.categoryTitle = new StringModel(categoryTitle);
         checklists = new ListModel<>();
-        checklists.addListListener(new ListModel.ListModelListener()
+        checklists.addListener(new ListModel.ListModelListener<>()
         {
             @Override
-            public void itemAdded(Object item)
+            public void itemAdded(Checklist item)
             {
                 updateChecklists();
             }
 
             @Override
-            public void itemRemoved(Object item)
+            public void itemRemoved(Checklist item)
             {
                 /*
                  * Do Nothing
@@ -38,8 +38,7 @@ public class ChecklistCategory
             @Override
             public void listChanged()
             {
-                if (checklists.get().size() != 0)
-                {
+                if (checklists.get().size() != 0) {
                     updateChecklists();
                 }
             }
