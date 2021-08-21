@@ -1,0 +1,71 @@
+
+* {
+    -light-grey : #999999;
+    -grey : #737373;
+    -darker-grey : #5c5c5c;
+
+    -blue : #167db5;
+    -light-blue : #19abfa
+}
+
+.root {
+    -fx-background-color: -darker-grey;
+}
+
+.button {
+    -fx-text-fill: white;
+
+    -fx-background-color: -grey;
+    -fx-background-radius: 3;
+    -fx-background-insets: 1;
+    -fx-border-color: -light-grey;
+    -fx-border-width: 1;
+    -fx-border-radius: 3;
+}
+
+.button:hover {
+    -fx-background-color: -light-grey;
+}
+
+#action-button {
+    -fx-background-color: -blue;
+    -fx-border-color: -light-blue;
+}
+
+#action-button:hover {
+    -fx-background-color: -light-blue;
+}
+
+.text-field {
+    -fx-background-color: -grey;
+    -fx-background-radius: 5;
+
+    -fx-text-fill: white;
+    -fx-font-size: 12pt;
+    -fx-font-style: bold;
+}
+
+.text-area {
+    -fx-font-size: 12pt;
+    -fx-background-color: -grey;
+    -fx-background-radius: 5;
+    -fx-text-fill: white;
+}
+
+.text-area .scroll-pane {
+    -fx-background-color: -grey;
+    -fx-background-radius: 5;
+}
+
+.text-area .scroll-pane .viewport{
+    -fx-background-color: -grey;
+    -fx-background-radius: 5;
+}
+
+.text-area .scroll-pane .content{
+    -fx-background-color: -grey;
+    -fx-background-radius: 5;
+}
+
+
+

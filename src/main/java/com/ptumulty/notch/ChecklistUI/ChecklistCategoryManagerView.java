@@ -1,10 +1,13 @@
 package com.ptumulty.notch.ChecklistUI;
 
+import com.ptumulty.ceramic.ceramicfx.CancelableActionPopupWindow;
 import com.ptumulty.ceramic.utility.StringUtils;
 import com.ptumulty.notch.AppContext;
 import com.ptumulty.notch.Checklist.ChecklistCategory;
 import com.ptumulty.notch.Checklist.ChecklistCategoryManager;
 import com.ptumulty.notch.Checklist.ChecklistCategoryManagerImpl;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -26,6 +29,8 @@ public class ChecklistCategoryManagerView extends BorderPane
 
     public ChecklistCategoryManagerView()
     {
+        getStyleClass().add(".manager-view-pane");
+
         checklistCategoryListView = new ChecklistCategoryListView();
         topBar = new HBox();
         topBar.setAlignment(Pos.CENTER);
@@ -57,44 +62,25 @@ public class ChecklistCategoryManagerView extends BorderPane
 
         NameCategoryPopup()
         {
-            configureStage();
-
-            configureVBox();
+            vBox = new VBox();
+            vBox.setSpacing(10);
+            vBox.setPadding(new Insets(10,10,0,10));
+            vBox.setAlignment(Pos.CENTER);
 
             categoryNameField = new TextField();
-            categoryNameField.setPromptText("Title...");
+            categoryNameField.setPromptText("Category Title...");
             vBox.getChildren().add(categoryNameField);
 
             defaultChecklistItems = new TextArea();
             vBox.getChildren().add(defaultChecklistItems);
 
-            configureButtons();
+            EventHandler<ActionEvent> actionEvent = event -> createCategory();
 
-            stage.setScene(new Scene(vBox, 300, 300));
-            stage.show();
-        }
-
-        private void configureVBox()
-        {
-            vBox = new VBox();
-            vBox.setSpacing(10);
-            vBox.setPadding(new Insets(10));
-            vBox.setAlignment(Pos.CENTER);
-        }
-
-        private void configureButtons()
-        {
-            Button createButton = new Button("Create");
-            createButton.setOnAction(event -> createCategory());
-
-            Button cancelButton = new Button("Cancel");
-            cancelButton.setOnAction(event -> stage.close());
-
-            HBox hBox = new HBox(cancelButton, createButton);
-            hBox.setAlignment(Pos.CENTER);
-            hBox.setSpacing(10);
-
-            vBox.getChildren().add(hBox);
+            CancelableActionPopupWindow popupWindow = new CancelableActionPopupWindow(vBox, "Create", actionEvent);
+            popupWindow.setStylesheet("css/main-stylesheet.css");
+            popupWindow.setWindowTitle("Checklist Category Creation");
+            popupWindow.setActionButtonID("action-button");
+            popupWindow.show(300, 300);
         }
 
         private void createCategory()
@@ -117,14 +103,6 @@ public class ChecklistCategoryManagerView extends BorderPane
                 TODO: Check here for how many of this already existing name shows up and append a number at the end.
                  */
             }
-            stage.close();
-        }
-
-        private void configureStage()
-        {
-            stage = new Stage();
-            stage.setTitle("Create Category");
-            stage.initModality(Modality.APPLICATION_MODAL);
         }
 
     }

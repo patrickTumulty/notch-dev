@@ -9,7 +9,6 @@ plugins {
 
 group = 'com.ptumulty'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
 
 configurations {
     compileOnly {
@@ -29,6 +28,10 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.5.3'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.3'
+
+    implementation 'org.kordamp.ikonli:ikonli-fontawesome5-pack:12.2.0'
+    implementation 'org.kordamp.ikonli:ikonli-material2-pack:12.2.0'
+    implementation 'org.kordamp.ikonli:ikonli-materialdesign2-pack:12.2.0'
 
     implementation project("modules:ceramic-dev")
 }

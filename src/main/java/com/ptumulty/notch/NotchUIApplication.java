@@ -16,7 +16,7 @@ public class NotchUIApplication extends Application
     public void start(Stage primaryStage)
     {
         Scene scene = new Scene(new MainPanel());
-        scene.getStylesheets().add("css/main-panel.css");
+        scene.getStylesheets().add("css/main-stylesheet.css");
 
         primaryStage.setScene(scene);
 
