@@ -53,16 +53,14 @@ public class ChecklistCategoryManagerView extends BorderPane
         setCenter(checklistCategoryListView);
     }
 
-    private class NameCategoryPopup
+    private static class NameCategoryPopup
     {
-        private Stage stage;
-        private VBox vBox;
-        private TextArea defaultChecklistItems;
-        private TextField categoryNameField;
+        private final TextArea defaultChecklistItems;
+        private final TextField categoryNameField;
 
         NameCategoryPopup()
         {
-            vBox = new VBox();
+            VBox vBox = new VBox();
             vBox.setSpacing(10);
             vBox.setPadding(new Insets(10,10,0,10));
             vBox.setAlignment(Pos.CENTER);

@@ -36,6 +36,7 @@ public class ChecklistCategoryListView extends ListView<ChecklistCategoryListIte
         listItemView.setOnMousePressed(event -> listeners.forEach(listener -> listener.itemSelected(listItemView)));
         categoryModelToViewMap.put(categoryAdded, listItemView);
         getItems().add(categoryModelToViewMap.get(categoryAdded));
+        getSelectionModel().select(listItemView);
     }
 
     @Override

@@ -1,18 +1,20 @@
 package com.ptumulty.notch.ChecklistUI;
 
+import com.ptumulty.ceramic.ceramicfx.CancelableActionPopupWindow;
 import com.ptumulty.ceramic.components.BooleanComponent;
 import com.ptumulty.ceramic.components.ListSelectionListener;
 import com.ptumulty.notch.Checklist.Checklist;
-import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,54 +22,64 @@ import java.util.Optional;
 
 public class ExtendedChecklistTableView extends StackPane implements ListSelectionListener<ChecklistCategoryListItemView>
 {
+    private final int PREF_COLUMN_WIDTH = 75;
+
     private final Map<String, TableColumn<ChecklistTableItem, ChecklistTableItem>> columnMap;
     private ChecklistCategoryListItem checklistCategoryListItem;
     private final TableView<ChecklistTableItem> tableView;
-    private final Button createChecklistButton;
+    private Button createChecklistButton;
 
     public ExtendedChecklistTableView()
     {
         columnMap = new HashMap<>();
         tableView = new TableView<>();
+        tableView.setFixedCellSize(35);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         getChildren().add(tableView);
         StackPane.setAlignment(tableView, Pos.CENTER);
 
-        createChecklistButton = new Button("+");
+        configureCreateChecklistButton();
+
+        buildTable();
+    }
+
+    private void configureCreateChecklistButton()
+    {
+        createChecklistButton = new Button();
+        FontIcon icon = new FontIcon(FontAwesomeSolid.PLUS);
+        icon.setIconSize(15);
+        icon.setIconColor(Color.WHITE);
+        createChecklistButton.setGraphic(icon);
+        createChecklistButton.setId("add-checklist-button");
+        createChecklistButton.disableProperty().set(true);
+        createChecklistButton.setShape(new Circle(50));
+        createChecklistButton.setPrefSize(50, 50);
         createChecklistButton.setOnAction(event ->
         {
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-
             VBox vBox = new VBox();
             vBox.setAlignment(Pos.CENTER);
-            vBox.setPadding(new Insets(10));
-            vBox.setSpacing(10);
+            vBox.setPadding(new Insets(10,10,0,10));
 
             TextField textField = new TextField();
             vBox.getChildren().add(textField);
 
-            Button createButton = new Button("Create");
-            createButton.setOnAction(event2 ->
+            EventHandler<ActionEvent> createChecklist = event1 ->
             {
                 Checklist checklist = new Checklist(textField.getText());
                 checklistCategoryListItem.getCategory().getChecklists().addItem(checklist);
-                stage.close();
-            });
-            vBox.getChildren().add(createButton);
+                onContextChange(checklistCategoryListItem);
+            };
 
-            stage.setScene(new Scene(vBox, 200, 100));
-            stage.show();
+            CancelableActionPopupWindow popupWindow = new CancelableActionPopupWindow(vBox, "Create", createChecklist);
+            popupWindow.setStylesheet("css/main-stylesheet.css");
+            popupWindow.setActionButtonID("action-button");
+            popupWindow.setWindowTitle("Create Checklist");
+            popupWindow.show(250, 100);
         });
-
-
-        createChecklistButton.disableProperty().set(true);
-        createChecklistButton.setShape(new Circle(40));
-        createChecklistButton.setPrefSize(40, 40);
-
         getChildren().add(createChecklistButton);
-        StackPane.setAlignment(createChecklistButton, Pos.TOP_RIGHT);
-        StackPane.setMargin(createChecklistButton, new Insets(34, 10, 0, 0) );
+        StackPane.setAlignment(createChecklistButton, Pos.BOTTOM_RIGHT);
+        StackPane.setMargin(createChecklistButton, new Insets(0, 10, 10, 0) );
     }
 
     private void disposeTable()
@@ -92,6 +104,7 @@ public class ExtendedChecklistTableView extends StackPane implements ListSelecti
     {
         TableColumn<ChecklistTableItem, ChecklistTableItem> checklistTaskColumn = new TableColumn<>(taskName);
         checklistTaskColumn.setSortable(false);
+        checklistTaskColumn.setMinWidth(PREF_COLUMN_WIDTH);
         checklistTaskColumn.setCellValueFactory(TableColumn.CellDataFeatures::getValue);
         checklistTaskColumn.setCellFactory(param -> new CheckableTableCell(taskName));
         tableView.getColumns().add(checklistTaskColumn);
@@ -117,14 +130,7 @@ public class ExtendedChecklistTableView extends StackPane implements ListSelecti
 
         createChecklistButton.disableProperty().set(false);
 
-        if (checklistCategoryListItem.getChecklists().isEmpty())
-        {
-            tableView.setItems(FXCollections.emptyObservableList());
-        }
-        else
-        {
-            tableView.setItems(checklistCategoryListItem.getChecklists());
-        }
+        tableView.setItems(checklistCategoryListItem.getChecklists());
     }
 
     private void assembleTaskColumns()
@@ -145,7 +151,9 @@ public class ExtendedChecklistTableView extends StackPane implements ListSelecti
     {
         TableColumn<ChecklistTableItem, String> checklistNameColumn = new TableColumn<>("Item Name");
         checklistNameColumn.setEditable(false);
+        checklistNameColumn.setReorderable(false);
         checklistNameColumn.setSortable(false);
+        checklistNameColumn.setMinWidth(PREF_COLUMN_WIDTH);
         checklistNameColumn.setCellValueFactory(param -> param.getValue().titleProperty());
         tableView.getColumns().add(checklistNameColumn);
     }
@@ -156,7 +164,7 @@ public class ExtendedChecklistTableView extends StackPane implements ListSelecti
         setChecklistCategoryListItem(selectedItem.getCategoryListItem());
     }
 
-    private class CheckableTableCell extends TableCell<ChecklistTableItem, ChecklistTableItem>
+    private static class CheckableTableCell extends TableCell<ChecklistTableItem, ChecklistTableItem>
     {
         private final String name;
 
