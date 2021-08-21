@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.material2.Material2AL;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class ExtendedChecklistTableView extends StackPane implements ListSelecti
         tableView = new TableView<>();
         tableView.setFixedCellSize(35);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableView.setPlaceholder(new Label("No Category Selected"));
 
         getChildren().add(tableView);
         StackPane.setAlignment(tableView, Pos.CENTER);

@@ -1,0 +1,21 @@
+
+.list-view {
+    -fx-border-radius: 1;
+    -fx-border-color: -light-grey;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: -theme-color;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: -theme-color-light;
+}
+
+.list-cell:odd {
+    -fx-background-color: -light-charcoal;
+}
+
+.list-cell:even {
+    -fx-background-color: -lighter-charcoal;
+}

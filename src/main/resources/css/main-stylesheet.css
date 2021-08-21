@@ -4,16 +4,31 @@
     -grey : #737373;
     -darker-grey : #5c5c5c;
 
+    -light-charcoal : #4f4f57;
     -lighter-charcoal : #3f3f45;
     -charcoal : #29292D;
+    -light-purple : #A76CFF;
     -purple : #6622CC;
 
     -blue : #167db5;
-    -light-blue : #19abfa
+    -light-blue : #19abfa;
+
+    -light-orange : #FF9853;
+    -orange : #CC6622;
+
+    -theme-color : -purple;
+    -theme-color-light : -light-purple;
+
+    -accent : -blue;
+    -accent-light : -light-blue;
 }
 
 .root {
     -fx-background-color: -lighter-charcoal;
+}
+
+.label {
+    -fx-text-fill: white;
 }
 
 .button {
@@ -32,12 +47,12 @@
 }
 
 #action-button {
-    -fx-background-color: -blue;
-    -fx-border-color: -light-blue;
+    -fx-background-color: -accent;
+    -fx-border-color: -accent-light;
 }
 
 #action-button:hover {
-    -fx-background-color: -light-blue;
+    -fx-background-color: -accent-light;
 }
 
 .text-field {
