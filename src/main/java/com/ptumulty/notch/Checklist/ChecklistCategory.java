@@ -19,47 +19,14 @@ public class ChecklistCategory
     {
         this.categoryTitle = new StringModel(categoryTitle);
         checklists = new ListModel<>();
-        checklists.addListener(new ListModel.ListModelListener<>()
-        {
-            @Override
-            public void itemAdded(Checklist item)
-            {
-                updateChecklists();
-            }
-
-            @Override
-            public void itemRemoved(Checklist item)
-            {
-                /*
-                 * Do Nothing
-                 */
-            }
-
-            @Override
-            public void listChanged()
-            {
-                if (checklists.get().size() != 0) {
-                    updateChecklists();
-                }
-            }
-        });
 
         defaultChecklistTasks = new ListModel<>();
         additionalChecklistItems = new ListModel<>();
     }
 
-    public void setDefaultChecklistTasks(List<String> items)
+    public void setCategoryTasks(List<String> items)
     {
         defaultChecklistTasks.setList(items);
-        updateChecklists();
-    }
-
-    private void updateChecklists()
-    {
-        for (Checklist checklist : checklists.get())
-        {
-            checklist.addNewChecklistItems(defaultChecklistTasks.get());
-        }
     }
 
     public void addAdditionalChecklistItems(List<String> items)
@@ -67,7 +34,7 @@ public class ChecklistCategory
         additionalChecklistItems.addItems(items);
     }
 
-    public List<String> getDefaultChecklistItemsSnapshot()
+    public List<String> getCategoryTasksSnapshot()
     {
         return new ArrayList<>(List.copyOf(defaultChecklistTasks.getItemsSnapshot()));
     }

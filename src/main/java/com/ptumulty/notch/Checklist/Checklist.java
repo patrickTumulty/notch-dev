@@ -1,21 +1,25 @@
 package com.ptumulty.notch.Checklist;
 
 import com.ptumulty.ceramic.models.BooleanModel;
-import com.ptumulty.ceramic.models.ListModel;
 import com.ptumulty.ceramic.models.StringModel;
-import com.sun.javafx.collections.ImmutableObservableList;
 
 import java.util.*;
 
 public class Checklist
 {
     private final StringModel name;
-    private final Map<String, BooleanModel> checklistItems;
+    private final Map<String, BooleanModel> checklistTasks;
 
     public Checklist(String name)
     {
+        this(name, Collections.emptyList());
+    }
+
+    public Checklist(String name, List<String> tasks)
+    {
         this.name = new StringModel(name);
-        checklistItems = new HashMap<>();
+        checklistTasks = new HashMap<>();
+        addTasks(tasks);
     }
 
     public StringModel getName()
@@ -23,33 +27,33 @@ public class Checklist
         return name;
     }
 
-    public void addNewChecklistItem(String itemName)
+    public void addTask(String taskName)
     {
-        if (!checklistItems.containsKey(itemName))
+        if (!checklistTasks.containsKey(taskName))
         {
-            checklistItems.put(itemName, new BooleanModel(false));
+            checklistTasks.put(taskName, new BooleanModel(false));
         }
     }
 
-    public void addNewChecklistItems(List<String> itemNames)
+    public void addTasks(List<String> taskNames)
     {
-        for (String name : itemNames)
+        for (String name : taskNames)
         {
-            if (!checklistItems.containsKey(name))
+            if (!checklistTasks.containsKey(name))
             {
-                checklistItems.put(name, new BooleanModel(false));
+                checklistTasks.put(name, new BooleanModel(false));
             }
         }
     }
 
-    public List<String> getChecklistTaskNames()
+    public List<String> getTaskNamesSnapshot()
     {
-        return new ArrayList<>(List.copyOf(checklistItems.keySet()));
+        return new ArrayList<>(List.copyOf(checklistTasks.keySet()));
     }
 
-    public Optional<BooleanModel> getItemCheckedState(String itemName)
+    public Optional<BooleanModel> getTaskState(String taskName)
     {
-        return Optional.ofNullable(checklistItems.get(itemName));
+        return Optional.ofNullable(checklistTasks.get(taskName));
     }
 
     @Override
@@ -70,6 +74,6 @@ public class Checklist
     @Override
     public int hashCode()
     {
-        return Objects.hash(name, checklistItems);
+        return Objects.hash(name, checklistTasks);
     }
 }

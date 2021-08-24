@@ -7,7 +7,7 @@ public class ChecklistUtils
         for (Checklist checklist : category.getChecklists().getItemsSnapshot())
         {
             System.out.println(checklist);
-            for (String itemName : checklist.getChecklistTaskNames())
+            for (String itemName : checklist.getTaskNamesSnapshot())
             {
                 System.out.println("\t" + itemName);
             }

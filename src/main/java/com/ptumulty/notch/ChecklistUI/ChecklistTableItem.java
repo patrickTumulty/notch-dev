@@ -28,9 +28,9 @@ public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem>
 
     private void populateChecklistTasks()
     {
-        for (String itemName : checklist.getChecklistTaskNames())
+        for (String itemName : checklist.getTaskNamesSnapshot())
         {
-            Optional<BooleanModel> checkedState = checklist.getItemCheckedState(itemName);
+            Optional<BooleanModel> checkedState = checklist.getTaskState(itemName);
             checkedState.ifPresent(booleanModel ->
             {
                 checklistTasks.put(itemName, new BooleanComponent(booleanModel));

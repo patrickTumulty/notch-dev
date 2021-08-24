@@ -1,21 +1,15 @@
 package com.ptumulty.notch.ChecklistUI;
 
-import com.ptumulty.ceramic.ceramicfx.CancelableActionPopupWindow;
 import com.ptumulty.ceramic.components.BooleanComponent;
 import com.ptumulty.ceramic.components.ListSelectionListener;
-import com.ptumulty.notch.Checklist.Checklist;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.material2.Material2AL;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,8 +36,6 @@ public class ExtendedChecklistTableView extends StackPane implements ListSelecti
         StackPane.setAlignment(tableView, Pos.CENTER);
 
         configureCreateChecklistButton();
-
-        buildTable();
     }
 
     private void configureCreateChecklistButton()
@@ -57,28 +49,7 @@ public class ExtendedChecklistTableView extends StackPane implements ListSelecti
         createChecklistButton.disableProperty().set(true);
         createChecklistButton.setShape(new Circle(50));
         createChecklistButton.setPrefSize(50, 50);
-        createChecklistButton.setOnAction(event ->
-        {
-            VBox vBox = new VBox();
-            vBox.setAlignment(Pos.CENTER);
-            vBox.setPadding(new Insets(10,10,0,10));
-
-            TextField textField = new TextField();
-            vBox.getChildren().add(textField);
-
-            EventHandler<ActionEvent> createChecklist = event1 ->
-            {
-                Checklist checklist = new Checklist(textField.getText());
-                checklistCategoryListItem.getCategory().getChecklists().addItem(checklist);
-                onContextChange(checklistCategoryListItem);
-            };
-
-            CancelableActionPopupWindow popupWindow = new CancelableActionPopupWindow(vBox, "Create", createChecklist);
-            popupWindow.setStylesheet("css/main-stylesheet.css");
-            popupWindow.setActionButtonID("action-button");
-            popupWindow.setWindowTitle("Create Checklist");
-            popupWindow.show(250, 100);
-        });
+        createChecklistButton.setOnAction(event -> new CreateChecklistPopupWindow(checklistCategoryListItem));
         getChildren().add(createChecklistButton);
         StackPane.setAlignment(createChecklistButton, Pos.BOTTOM_RIGHT);
         StackPane.setMargin(createChecklistButton, new Insets(0, 10, 10, 0) );
@@ -139,7 +110,7 @@ public class ExtendedChecklistTableView extends StackPane implements ListSelecti
     {
         for (ChecklistTableItem checklist : checklistCategoryListItem.getChecklists())
         {
-            for (String columnTitle : checklist.getChecklist().getChecklistTaskNames())
+            for (String columnTitle : checklist.getChecklist().getTaskNamesSnapshot())
             {
                 if (!columnMap.containsKey(columnTitle))
                 {

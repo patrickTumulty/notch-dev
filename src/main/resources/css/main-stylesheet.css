@@ -87,4 +87,10 @@
 }
 
 
+#checkable-label {
+    -fx-background-color: -accent-light;
+    -fx-background-radius: 6;
+}
+
+
 
