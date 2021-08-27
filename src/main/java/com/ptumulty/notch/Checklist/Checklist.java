@@ -22,7 +22,6 @@ public class Checklist
         this.name = new StringModel(name);
         checklistTasks = new HashMap<>();
         dateCreated = LocalDate.now();
-        System.out.println(dateCreated);
         addTasks(tasks);
     }
 

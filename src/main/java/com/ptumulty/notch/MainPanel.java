@@ -32,8 +32,7 @@ public class MainPanel extends BorderPane
 
         configureLayout();
 
-
-        DEV();
+//        DEV();
     }
 
     private void DEV()
