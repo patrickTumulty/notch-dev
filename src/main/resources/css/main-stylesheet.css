@@ -61,7 +61,7 @@
 
     -fx-text-fill: white;
     -fx-font-size: 12pt;
-    -fx-font-style: bold;
+    -fx-font-weight: bold;
 }
 
 .text-area {

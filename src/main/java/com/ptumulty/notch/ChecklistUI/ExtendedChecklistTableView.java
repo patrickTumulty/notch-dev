@@ -101,6 +101,8 @@ public class ExtendedChecklistTableView extends StackPane implements ListSelecti
 
         buildTable();
 
+        tableView.setPlaceholder(new Label("Table Is Empty"));
+
         createChecklistButton.disableProperty().set(false);
 
         tableView.setItems(checklistCategoryListItem.getChecklists());
@@ -108,14 +110,11 @@ public class ExtendedChecklistTableView extends StackPane implements ListSelecti
 
     private void assembleTaskColumns()
     {
-        for (ChecklistTableItem checklist : checklistCategoryListItem.getChecklists())
+        for (String task : checklistCategoryListItem.getCategory().getCategoryTasksSnapshot())
         {
-            for (String columnTitle : checklist.getChecklist().getTaskNamesSnapshot())
+            if (!columnMap.containsKey(task))
             {
-                if (!columnMap.containsKey(columnTitle))
-                {
-                    columnMap.put(columnTitle, null);
-                }
+                columnMap.put(task, null);
             }
         }
     }

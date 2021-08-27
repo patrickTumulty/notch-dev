@@ -34,7 +34,6 @@ public class MainPanel extends BorderPane
 
 
         DEV();
-
     }
 
     private void DEV()
@@ -63,6 +62,4 @@ public class MainPanel extends BorderPane
         setLeft(categoryManagerView);
         setCenter(extendedChecklistTableView);
     }
-
-
 }

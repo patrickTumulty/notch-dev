@@ -3,12 +3,14 @@ package com.ptumulty.notch.Checklist;
 import com.ptumulty.ceramic.models.BooleanModel;
 import com.ptumulty.ceramic.models.StringModel;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class Checklist
 {
     private final StringModel name;
     private final Map<String, BooleanModel> checklistTasks;
+    private final LocalDate dateCreated;
 
     public Checklist(String name)
     {
@@ -19,6 +21,8 @@ public class Checklist
     {
         this.name = new StringModel(name);
         checklistTasks = new HashMap<>();
+        dateCreated = LocalDate.now();
+        System.out.println(dateCreated);
         addTasks(tasks);
     }
 

@@ -1,6 +1,7 @@
 
 .list-view {
     -fx-border-width: 1;
+    -fx-background-color: -lighter-charcoal;
     -fx-border-color: -light-grey;
 }
 

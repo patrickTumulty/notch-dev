@@ -33,11 +33,6 @@
 }
 
 .table-view .cell:hover {
-    -fx-background-color: -theme-color;
+    -fx-background-color: -lighter-charcoal;
 }
-
-.table-row-cell:selected *.cell{
-    -fx-background-color: -theme-color;
-}
-
 
