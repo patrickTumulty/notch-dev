@@ -5,6 +5,18 @@
     -fx-border-color: -light-grey;
 }
 
+.context-menu {
+    -fx-background-color: -charcoal;
+}
+
+.context-menu .menu-item:hover {
+    -fx-background-color: -theme-color;
+}
+
+.context-menu .menu-item:focused {
+    -fx-background-color: -theme-color;
+}
+
 .list-cell:filled:selected {
     -fx-background-color: -theme-color;
 }

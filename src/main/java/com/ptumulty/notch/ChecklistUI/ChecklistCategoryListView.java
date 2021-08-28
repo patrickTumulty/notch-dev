@@ -5,7 +5,12 @@ import com.ptumulty.ceramic.utility.Disposable;
 import com.ptumulty.notch.AppContext;
 import com.ptumulty.notch.Checklist.ChecklistCategory;
 import com.ptumulty.notch.Checklist.ChecklistCategoryManager;
+import com.ptumulty.notch.ChecklistUI.popups.CreateCategoryPopupWindow;
+import com.ptumulty.notch.ChecklistUI.popups.CreateChecklistPopupWindow;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +30,33 @@ public class ChecklistCategoryListView extends ListView<ChecklistCategoryListIte
 
         categoryModelToViewMap = new HashMap<>();
         listeners = new ArrayList<>();
+
+        ContextMenu contextMenu = new ContextMenu();
+
+        MenuItem addChecklist = new MenuItem("Add Checklist");
+        addChecklist.setOnAction(event ->
+                new CreateChecklistPopupWindow(
+                        getSelectionModel().getSelectedItem().getCategoryListItem()));
+
+        MenuItem newCategory = new MenuItem("New Category");
+        newCategory.setOnAction(event -> new CreateCategoryPopupWindow());
+
+        MenuItem configure = new MenuItem("Configure"); // TODO Configure
+        MenuItem delete = new MenuItem("Delete"); // TODO Delete: Create warning popup
+
+        contextMenu.getItems().addAll(List.of(addChecklist, new SeparatorMenuItem(), newCategory, configure, delete));
+
+        setContextMenu(contextMenu);
+
+        setOnContextMenuRequested(event ->
+        {
+            boolean contextOnListItem = !(event.getTarget() instanceof ChecklistCategoryListItemView);
+            addChecklist.setDisable(contextOnListItem);
+            configure.setDisable(contextOnListItem);
+            delete.setDisable(contextOnListItem);
+
+        });
+
     }
 
     @Override

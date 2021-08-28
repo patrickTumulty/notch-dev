@@ -1,8 +1,9 @@
-package com.ptumulty.notch.ChecklistUI;
+package com.ptumulty.notch.ChecklistUI.popups;
 
 import com.ptumulty.ceramic.ceramicfx.Action;
 import com.ptumulty.ceramic.ceramicfx.CancelableActionPopupWindow;
 import com.ptumulty.notch.Checklist.Checklist;
+import com.ptumulty.notch.ChecklistUI.ChecklistCategoryListItem;
 import com.ptumulty.notch.CustomComponents.CheckableLabel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

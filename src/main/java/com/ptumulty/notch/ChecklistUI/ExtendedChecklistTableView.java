@@ -2,6 +2,7 @@ package com.ptumulty.notch.ChecklistUI;
 
 import com.ptumulty.ceramic.components.BooleanComponent;
 import com.ptumulty.ceramic.components.ListSelectionListener;
+import com.ptumulty.notch.ChecklistUI.popups.CreateChecklistPopupWindow;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
