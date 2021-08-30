@@ -6,9 +6,9 @@ import com.ptumulty.notch.ChecklistUI.popups.CreateChecklistPopupWindow;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -16,14 +16,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class ExtendedChecklistTableView extends StackPane implements ListSelectionListener<ChecklistCategoryListItemView>
+public class ExtendedChecklistTableView extends BorderPane implements ListSelectionListener<ChecklistCategoryListItemView>
 {
     private final int PREF_COLUMN_WIDTH = 75;
 
     private final Map<String, TableColumn<ChecklistTableItem, ChecklistTableItem>> columnMap;
-    private ChecklistCategoryListItem checklistCategoryListItem;
     private final TableView<ChecklistTableItem> tableView;
+    private ChecklistCategoryListItem checklistCategoryListItem;
     private Button createChecklistButton;
+    private HBox controlBar;
+    private TextField filterField;
 
     public ExtendedChecklistTableView()
     {
@@ -33,10 +35,46 @@ public class ExtendedChecklistTableView extends StackPane implements ListSelecti
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tableView.setPlaceholder(new Label("No Category Selected"));
 
-        getChildren().add(tableView);
-        StackPane.setAlignment(tableView, Pos.CENTER);
+        setCenter(tableView);
+        BorderPane.setAlignment(tableView, Pos.CENTER);
+
+        configureControlBar();
+
+        configureFilterField();
 
         configureCreateChecklistButton();
+    }
+
+    private void configureFilterField()
+    {
+        filterField = new TextField();
+        filterField.setPromptText("Filter");
+        filterField.textProperty().addListener((observable, oldValue, newValue) ->
+        {
+            if (checklistCategoryListItem == null)
+            {
+                return;
+            }
+
+            checklistCategoryListItem.getFilterChecklists().setPredicate(
+                    filterField.getText().isBlank() ?
+                            p -> true :
+                            tableItem -> tableItem.getChecklist()
+                                                  .getName()
+                                                  .get()
+                                                  .contains(filterField.getText()));
+        });
+        controlBar.getChildren().add(filterField);
+    }
+
+    private void configureControlBar()
+    {
+        controlBar = new HBox();
+        controlBar.setAlignment(Pos.CENTER_LEFT);
+        controlBar.setPadding(new Insets(5, 10, 5, 10));
+        controlBar.setSpacing(10);
+        BorderPane.setAlignment(controlBar, Pos.CENTER);
+        setTop(controlBar);
     }
 
     private void configureCreateChecklistButton()
@@ -46,14 +84,9 @@ public class ExtendedChecklistTableView extends StackPane implements ListSelecti
         icon.setIconSize(15);
         icon.setIconColor(Color.WHITE);
         createChecklistButton.setGraphic(icon);
-        createChecklistButton.setId("add-checklist-button");
         createChecklistButton.disableProperty().set(true);
-        createChecklistButton.setShape(new Circle(50));
-        createChecklistButton.setPrefSize(50, 50);
         createChecklistButton.setOnAction(event -> new CreateChecklistPopupWindow(checklistCategoryListItem));
-        getChildren().add(createChecklistButton);
-        StackPane.setAlignment(createChecklistButton, Pos.BOTTOM_RIGHT);
-        StackPane.setMargin(createChecklistButton, new Insets(0, 10, 10, 0) );
+        controlBar.getChildren().add(createChecklistButton);
     }
 
     private void disposeTable()
@@ -106,7 +139,7 @@ public class ExtendedChecklistTableView extends StackPane implements ListSelecti
 
         createChecklistButton.disableProperty().set(false);
 
-        tableView.setItems(checklistCategoryListItem.getChecklists());
+        tableView.setItems(checklistCategoryListItem.getFilterChecklists());
     }
 
     private void assembleTaskColumns()

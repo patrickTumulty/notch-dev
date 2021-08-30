@@ -13,9 +13,9 @@ import java.util.Optional;
 
 public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem>
 {
+    private final StringProperty title;
+    private final Map<String, BooleanComponent> checklistTasks;
     public Checklist checklist;
-    private StringProperty title;
-    private Map<String, BooleanComponent> checklistTasks;
 
     public ChecklistTableItem(Checklist checklist)
     {

@@ -5,19 +5,24 @@ import com.ptumulty.notch.Checklist.Checklist;
 import com.ptumulty.notch.Checklist.ChecklistCategory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class ChecklistCategoryListItem
 {
     private final ChecklistCategory category;
     private final ObservableList<ChecklistTableItem> checklists;
+    private final FilteredList<ChecklistTableItem> filterChecklists;
     private final Map<Checklist, ChecklistTableItem> listToTableItem;
 
     public ChecklistCategoryListItem(ChecklistCategory category)
     {
         checklists = FXCollections.observableArrayList();
+        filterChecklists = new FilteredList<>(checklists, p -> true);
+
         this.category = category;
         listToTableItem = new HashMap<>();
 
@@ -75,5 +80,10 @@ public class ChecklistCategoryListItem
     public ObservableList<ChecklistTableItem> getChecklists()
     {
         return checklists;
+    }
+
+    public FilteredList<ChecklistTableItem> getFilterChecklists()
+    {
+        return filterChecklists;
     }
 }
