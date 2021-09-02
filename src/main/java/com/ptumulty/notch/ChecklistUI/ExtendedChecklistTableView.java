@@ -13,8 +13,10 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class ExtendedChecklistTableView extends BorderPane implements ListSelectionListener<ChecklistCategoryListItemView>
 {
@@ -25,7 +27,9 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
     private ChecklistCategoryListItem checklistCategoryListItem;
     private Button createChecklistButton;
     private HBox controlBar;
+    private BorderPane controlBarContainer;
     private TextField filterField;
+    private ChoiceBox<VisibilityOptions> visibilityOptions;
 
     public ExtendedChecklistTableView()
     {
@@ -42,7 +46,28 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
 
         configureFilterField();
 
+        configureVisibilityOption();
+
         configureCreateChecklistButton();
+    }
+
+    private void configureVisibilityOption()
+    {
+        visibilityOptions = new ChoiceBox<>();
+        visibilityOptions.getItems().addAll(List.of(VisibilityOptions.ALL,
+                                                    VisibilityOptions.COMPLETED,
+                                                    VisibilityOptions.NOT_COMPLETED));
+        visibilityOptions.getSelectionModel().select(VisibilityOptions.ALL);
+        visibilityOptions.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+        {
+            if (checklistCategoryListItem == null)
+            {
+                return;
+            }
+
+            checklistCategoryListItem.getFilterChecklists().setPredicate(getCombinedPredicate());
+        });
+        controlBar.getChildren().add(visibilityOptions);
     }
 
     private void configureFilterField()
@@ -56,37 +81,60 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
                 return;
             }
 
-            checklistCategoryListItem.getFilterChecklists().setPredicate(
-                    filterField.getText().isBlank() ?
-                            p -> true :
-                            tableItem -> tableItem.getChecklist()
-                                                  .getName()
-                                                  .get()
-                                                  .contains(filterField.getText()));
+            checklistCategoryListItem.getFilterChecklists().setPredicate(getCombinedPredicate());
         });
         controlBar.getChildren().add(filterField);
+    }
+
+    private Predicate<ChecklistTableItem> getCombinedPredicate()
+    {
+        Predicate<ChecklistTableItem> filterFieldPredicate =
+                filterField.getText().isBlank() ?
+                        p -> true :
+                        tableItem -> tableItem.getChecklist()
+                                              .getName()
+                                              .get()
+                                              .contains(filterField.getText());
+
+        Predicate<ChecklistTableItem> visibilityPredicate = tableItem ->
+        {
+            switch (visibilityOptions.getSelectionModel().getSelectedItem()) {
+                case COMPLETED:
+                    return tableItem.getChecklist().isComplete();
+                case NOT_COMPLETED:
+                    return !tableItem.getChecklist().isComplete();
+            }
+            return true;
+        };
+
+        return tableItem -> filterFieldPredicate.test(tableItem) && visibilityPredicate.test(tableItem);
     }
 
     private void configureControlBar()
     {
         controlBar = new HBox();
+        controlBarContainer = new BorderPane();
+        controlBarContainer.setCenter(controlBar);
+
         controlBar.setAlignment(Pos.CENTER_LEFT);
         controlBar.setPadding(new Insets(5, 10, 5, 10));
         controlBar.setSpacing(10);
         BorderPane.setAlignment(controlBar, Pos.CENTER);
-        setTop(controlBar);
+        setTop(controlBarContainer);
     }
 
     private void configureCreateChecklistButton()
     {
         createChecklistButton = new Button();
         FontIcon icon = new FontIcon(FontAwesomeSolid.PLUS);
-        icon.setIconSize(15);
+        icon.setIconSize(20);
         icon.setIconColor(Color.WHITE);
         createChecklistButton.setGraphic(icon);
         createChecklistButton.disableProperty().set(true);
         createChecklistButton.setOnAction(event -> new CreateChecklistPopupWindow(checklistCategoryListItem));
-        controlBar.getChildren().add(createChecklistButton);
+        controlBarContainer.setRight(createChecklistButton);
+        BorderPane.setAlignment(createChecklistButton, Pos.CENTER);
+        BorderPane.setMargin(createChecklistButton, new Insets(5, 10, 5, 10));
     }
 
     private void disposeTable()
@@ -201,6 +249,26 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
                     setGraphic(new Label("n/a"));
                 }
             }
+        }
+    }
+
+    private enum VisibilityOptions
+    {
+        ALL("All"),
+        COMPLETED("Completed"),
+        NOT_COMPLETED("Not Completed");
+
+        private final String name;
+
+        VisibilityOptions(String name)
+        {
+            this.name = name;
+        }
+
+        @Override
+        public String toString()
+        {
+            return name;
         }
     }
 }

@@ -9,7 +9,6 @@ import javafx.collections.transformation.FilteredList;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 
 public class ChecklistCategoryListItem
 {
@@ -39,7 +38,7 @@ public class ChecklistCategoryListItem
             public void itemAdded(Checklist item)
             {
                 listToTableItem.put(item, new ChecklistTableItem(item));
-                checklists.add(listToTableItem.get(item));
+                checklists.add(0, listToTableItem.get(item));
             }
 
             @Override

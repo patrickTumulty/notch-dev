@@ -32,9 +32,7 @@ public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem>
         {
             Optional<BooleanModel> checkedState = checklist.getTaskState(itemName);
             checkedState.ifPresent(booleanModel ->
-            {
-                checklistTasks.put(itemName, new BooleanComponent(booleanModel));
-            });
+                    checklistTasks.put(itemName, new BooleanComponent(booleanModel)));
         }
     }
 

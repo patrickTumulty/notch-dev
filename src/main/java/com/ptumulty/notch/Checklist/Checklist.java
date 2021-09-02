@@ -11,6 +11,7 @@ public class Checklist
     private final StringModel name;
     private final Map<String, BooleanModel> checklistTasks;
     private final LocalDate dateCreated;
+    private final BooleanModel isCompleted;
 
     public Checklist(String name)
     {
@@ -22,12 +23,36 @@ public class Checklist
         this.name = new StringModel(name);
         checklistTasks = new HashMap<>();
         dateCreated = LocalDate.now();
+        isCompleted = new BooleanModel(false);
         addTasks(tasks);
+    }
+
+    public LocalDate getDateCreated()
+    {
+        return dateCreated;
     }
 
     public StringModel getName()
     {
         return name;
+    }
+
+    public boolean isComplete()
+    {
+        return isCompleted.get();
+    }
+
+    private void calculateIsComplete()
+    {
+        for (BooleanModel booleanModel : checklistTasks.values())
+        {
+            if (!booleanModel.get())
+            {
+                isCompleted.setValue(false);
+                return;
+            }
+        }
+        isCompleted.setValue(true);
     }
 
     public void addTask(String taskName)
@@ -36,17 +61,12 @@ public class Checklist
         {
             checklistTasks.put(taskName, new BooleanModel(false));
         }
+        checklistTasks.get(taskName).addListener(this::calculateIsComplete);
     }
 
     public void addTasks(List<String> taskNames)
     {
-        for (String name : taskNames)
-        {
-            if (!checklistTasks.containsKey(name))
-            {
-                checklistTasks.put(name, new BooleanModel(false));
-            }
-        }
+        taskNames.forEach(this::addTask);
     }
 
     public List<String> getTaskNamesSnapshot()

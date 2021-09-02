@@ -46,6 +46,18 @@
     -fx-background-color: -light-grey;
 }
 
+.choice-box {
+    -fx-text-fill: white;
+    -fx-font-size: 12pt;
+
+    -fx-background-color: -charcoal;
+    -fx-background-radius: 3;
+    -fx-background-insets: 1;
+    -fx-border-color: -light-grey;
+    -fx-border-width: 1;
+    -fx-border-radius: 3;
+}
+
 #action-button {
     -fx-background-color: -accent;
     -fx-border-color: -accent-light;
@@ -56,33 +68,32 @@
 }
 
 .text-field {
-    -fx-background-color: -light-grey;
+    -fx-background-color: -light-charcoal;
     -fx-background-radius: 3;
 
     -fx-text-fill: white;
     -fx-font-size: 12pt;
-    -fx-font-weight: bold;
 }
 
 .text-area {
     -fx-font-size: 12pt;
-    -fx-background-color: -light-grey;
+    -fx-background-color: -light-charcoal;
     -fx-background-radius: 3;
     -fx-text-fill: white;
 }
 
 .text-area .scroll-pane {
-    -fx-background-color: -light-grey;
+    -fx-background-color: -light-charcoal;
     -fx-background-radius: 3;
 }
 
 .text-area .scroll-pane .viewport{
-    -fx-background-color: -light-grey;
+    -fx-background-color: -light-charcoal;
     -fx-background-radius: 3;
 }
 
 .text-area .scroll-pane .content{
-    -fx-background-color: -light-grey;
+    -fx-background-color: -light-charcoal;
     -fx-background-radius: 3;
 }
 

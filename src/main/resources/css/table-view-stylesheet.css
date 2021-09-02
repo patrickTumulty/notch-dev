@@ -15,7 +15,7 @@
 .table-view .column-header,
 .table-view .column-header-background .filler {
     -fx-background-color: -theme-color;
-    -fx-pref-height: 40;
+    -fx-pref-height: 35;
 }
 
 .table-view .column-header .label{
@@ -24,7 +24,7 @@
     -fx-alignment: CENTER;
 }
 
-.table-view .cell{
+.table-view .cell {
     -fx-cell-size: 35;
     -fx-alignment: CENTER;
     -fx-background-color: -charcoal;
