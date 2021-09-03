@@ -16,8 +16,8 @@
     -light-orange : #FF9853;
     -orange : #CC6622;
 
-    -theme-color : -purple;
-    -theme-color-light : -light-purple;
+    -theme-color : -blue;
+    -theme-color-light : -light-blue;
 
     -accent : -blue;
     -accent-light : -light-blue;
@@ -97,11 +97,29 @@
     -fx-background-radius: 3;
 }
 
-
 #checkable-label {
     -fx-background-color: -accent-light;
     -fx-background-radius: 6;
 }
 
+.check-box .box {
+    -fx-background-color: -grey;
+    -fx-background-radius: 3px;
+}
 
+.check-box:selected .mark {
+    -fx-background-color: white;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -accent;
+}
+
+.check-box .box:hover {
+    -fx-background-color: -lighter-grey;
+}
+
+.check-box:selected .box:hover {
+    -fx-background-color: -accent-light;
+}
 

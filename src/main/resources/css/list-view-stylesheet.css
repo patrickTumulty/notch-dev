@@ -26,7 +26,7 @@
 }
 
 .list-cell:odd {
-    -fx-background-color: -light-charcoal;
+    -fx-background-color: -lighter-charcoal;
 }
 
 .list-cell:even {

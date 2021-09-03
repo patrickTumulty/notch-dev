@@ -2,6 +2,7 @@ package com.ptumulty.notch.ChecklistUI;
 
 import com.ptumulty.ceramic.components.BooleanComponent;
 import com.ptumulty.ceramic.components.ListSelectionListener;
+import com.ptumulty.ceramic.models.BooleanModel;
 import com.ptumulty.notch.ChecklistUI.popups.CreateChecklistPopupWindow;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -242,6 +243,15 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
                 Optional<BooleanComponent> booleanComponent = item.getTaskBooleanComponent(name);
                 if (booleanComponent.isPresent())
                 {
+                    this.setOnMouseClicked(event ->
+                    {
+                        if (item.getChecklist().getTaskState(name).isPresent())
+                        {
+                            BooleanModel booleanModel = item.getChecklist().getTaskState(name).get();
+                            boolean currentState = booleanModel.get();
+                            booleanModel.setValue(!currentState);
+                        }
+                    });
                     setGraphic(booleanComponent.get().getRenderer());
                 }
                 else
