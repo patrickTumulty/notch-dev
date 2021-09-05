@@ -22,12 +22,12 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:2.5.3'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:2.5.4'
     compileOnly 'org.projectlombok:lombok:1.18.20'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools:2.5.3'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.5.3'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools:2.5.4'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.5.4'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.3'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
 
     implementation 'org.kordamp.ikonli:ikonli-javafx:12.2.0'
     implementation 'org.kordamp.ikonli:ikonli-carbonicons-pack:12.2.0'

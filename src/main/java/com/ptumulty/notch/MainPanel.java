@@ -6,6 +6,7 @@ import com.ptumulty.notch.Checklist.ChecklistCategoryManager;
 import com.ptumulty.notch.Checklist.ChecklistCategoryManagerImpl;
 import com.ptumulty.notch.ChecklistUI.ChecklistCategoryManagerView;
 import com.ptumulty.notch.ChecklistUI.ExtendedChecklistTableView;
+import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class MainPanel extends BorderPane
     MainPanel()
     {
         extendedChecklistTableView = new ExtendedChecklistTableView();
+        extendedChecklistTableView.setPadding(new Insets(2));
         categoryManagerView = new ChecklistCategoryManagerView();
 
         setPrefSize(PREF_WIDTH, PREF_HEIGHT);
