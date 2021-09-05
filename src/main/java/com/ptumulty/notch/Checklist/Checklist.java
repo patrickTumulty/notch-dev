@@ -12,6 +12,7 @@ public class Checklist
     private final Map<String, BooleanModel> checklistTasks;
     private final LocalDate dateCreated;
     private final BooleanModel isCompleted;
+    private List<ChecklistListener> listeners;
 
     public Checklist(String name)
     {
@@ -21,6 +22,7 @@ public class Checklist
     public Checklist(String name, List<String> tasks)
     {
         this.name = new StringModel(name);
+        listeners = new ArrayList<>();
         checklistTasks = new HashMap<>();
         dateCreated = LocalDate.now();
         isCompleted = new BooleanModel(false);
@@ -60,8 +62,17 @@ public class Checklist
         if (!checklistTasks.containsKey(taskName))
         {
             checklistTasks.put(taskName, new BooleanModel(false));
+            listeners.forEach(listener -> listener.taskAdded(taskName));
+            listeners.forEach(ChecklistListener::checklistTasksChanged);
         }
         checklistTasks.get(taskName).addListener(this::calculateIsComplete);
+    }
+
+    public void removeTask(String taskName)
+    {
+        checklistTasks.remove(taskName);
+        listeners.forEach(listener -> listener.taskRemoved(taskName));
+        listeners.forEach(ChecklistListener::checklistTasksChanged);
     }
 
     public void addTasks(List<String> taskNames)
@@ -98,5 +109,24 @@ public class Checklist
     public int hashCode()
     {
         return Objects.hash(name, checklistTasks);
+    }
+
+    public void addListener(ChecklistListener listener)
+    {
+        this.listeners.add(listener);
+    }
+
+    public void removeListener(ChecklistListener listener)
+    {
+        this.listeners.remove(listener);
+    }
+
+    public interface ChecklistListener
+    {
+        void taskAdded(String task);
+
+        void taskRemoved(String task);
+
+        void checklistTasksChanged();
     }
 }

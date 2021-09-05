@@ -5,17 +5,14 @@ import com.ptumulty.ceramic.utility.Disposable;
 import com.ptumulty.notch.AppContext;
 import com.ptumulty.notch.Checklist.ChecklistCategory;
 import com.ptumulty.notch.Checklist.ChecklistCategoryManager;
-import com.ptumulty.notch.ChecklistUI.popups.CreateCategoryPopupWindow;
-import com.ptumulty.notch.ChecklistUI.popups.CreateChecklistPopupWindow;
+import com.ptumulty.notch.ChecklistUI.popups.ConfigureCategoryPopupWindow;
+import com.ptumulty.notch.ChecklistUI.popups.ConfigureChecklistPopupWindow;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ChecklistCategoryListView extends ListView<ChecklistCategoryListItemView>
                                        implements ChecklistCategoryManager.ChecklistManagerListener,
@@ -35,11 +32,10 @@ public class ChecklistCategoryListView extends ListView<ChecklistCategoryListIte
 
         MenuItem addChecklist = new MenuItem("Add Checklist");
         addChecklist.setOnAction(event ->
-                new CreateChecklistPopupWindow(
-                        getSelectionModel().getSelectedItem().getCategoryListItem()));
+                new ConfigureChecklistPopupWindow(getSelectionModel().getSelectedItem().getCategoryListItem(), Optional.empty()));
 
         MenuItem newCategory = new MenuItem("New Category");
-        newCategory.setOnAction(event -> new CreateCategoryPopupWindow());
+        newCategory.setOnAction(event -> new ConfigureCategoryPopupWindow());
 
         MenuItem configure = new MenuItem("Configure"); // TODO Configure
         MenuItem delete = new MenuItem("Delete"); // TODO Delete: Create warning popup
@@ -54,15 +50,12 @@ public class ChecklistCategoryListView extends ListView<ChecklistCategoryListIte
             addChecklist.setDisable(contextOnListItem);
             configure.setDisable(contextOnListItem);
             delete.setDisable(contextOnListItem);
-
         });
-
     }
 
     @Override
     public void checklistCategoryAdded(ChecklistCategory categoryAdded)
     {
-
         ChecklistCategoryListItemView listItemView = new ChecklistCategoryListItemView(
                                                      new ChecklistCategoryListItem(categoryAdded));
         listItemView.setOnMousePressed(event -> listeners.forEach(listener -> listener.itemSelected(listItemView)));

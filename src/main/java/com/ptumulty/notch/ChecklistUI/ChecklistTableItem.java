@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem>
+public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem> implements Checklist.ChecklistListener
 {
     private final StringProperty title;
     private final Map<String, BooleanComponent> checklistTasks;
@@ -23,6 +23,9 @@ public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem>
         title = new SimpleStringProperty(checklist.getName().get());
         checklistTasks = new HashMap<>();
 
+        checklist.getName().addListener(this::propertyChange);
+        checklist.addListener(this);
+
         populateChecklistTasks();
     }
 
@@ -30,10 +33,14 @@ public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem>
     {
         for (String itemName : checklist.getTaskNamesSnapshot())
         {
-            Optional<BooleanModel> checkedState = checklist.getTaskState(itemName);
-            checkedState.ifPresent(booleanModel ->
-                    checklistTasks.put(itemName, new BooleanComponent(booleanModel)));
+            createAndAddTaskComponent(itemName);
         }
+    }
+
+    private void createAndAddTaskComponent(String itemName)
+    {
+        Optional<BooleanModel> checkedState = checklist.getTaskState(itemName);
+        checkedState.ifPresent(booleanModel -> checklistTasks.put(itemName, new BooleanComponent(booleanModel)));
     }
 
     public StringProperty titleProperty()
@@ -51,14 +58,32 @@ public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem>
         return Optional.ofNullable(checklistTasks.get(taskName));
     }
 
-//    private void propertyChange()
-//    {
-//        fireValueChangedEvent();
-//    }
+    private void propertyChange()
+    {
+        fireValueChangedEvent();
+    }
 
     @Override
     public ChecklistTableItem getValue()
     {
         return this;
+    }
+
+    @Override
+    public void taskAdded(String task)
+    {
+        createAndAddTaskComponent(task);
+    }
+
+    @Override
+    public void taskRemoved(String task)
+    {
+        checklistTasks.remove(task);
+    }
+
+    @Override
+    public void checklistTasksChanged()
+    {
+        propertyChange();
     }
 }

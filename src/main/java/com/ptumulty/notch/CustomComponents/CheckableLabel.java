@@ -14,14 +14,20 @@ public class CheckableLabel extends HBox
 
     public CheckableLabel(String labelTitle)
     {
+        this(labelTitle, true);
+    }
+
+    public CheckableLabel(String labelTitle, boolean checked)
+    {
         setAlignment(Pos.CENTER_LEFT);
         setPadding(new Insets(5));
         setSpacing(5);
 
         checkbox = new CheckBox();
-        checkbox.setSelected(true);
-        checkbox.selectedProperty().addListener((observable, oldValue, newValue) ->
-            setStyle(newValue ? "-fx-background-color: -accent-light" : "-fx-background-color: transparent"));
+        checkbox.selectedProperty().addListener(
+                (observable, oldValue, newValue) ->
+                        setStyle(newValue ? "-fx-background-color: -accent-light" : "-fx-background-color: transparent"));
+        checkbox.setSelected(checked);
 
         getChildren().add(checkbox);
 

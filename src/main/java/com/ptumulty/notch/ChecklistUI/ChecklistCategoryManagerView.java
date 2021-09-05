@@ -1,6 +1,6 @@
 package com.ptumulty.notch.ChecklistUI;
 
-import com.ptumulty.notch.ChecklistUI.popups.CreateCategoryPopupWindow;
+import com.ptumulty.notch.ChecklistUI.popups.ConfigureCategoryPopupWindow;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -32,7 +32,7 @@ public class ChecklistCategoryManagerView extends BorderPane
         plusIcon.setIconColor(Color.WHITE);
         createButton.setGraphic(plusIcon);
         widthProperty().addListener((observable, oldValue, newValue) -> createButton.setPrefWidth(newValue.doubleValue()));
-        createButton.setOnAction(event -> new CreateCategoryPopupWindow());
+        createButton.setOnAction(event -> new ConfigureCategoryPopupWindow());
 
         setTop(createButton);
         setCenter(checklistCategoryListView);

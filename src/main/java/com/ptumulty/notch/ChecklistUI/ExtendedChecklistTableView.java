@@ -3,7 +3,7 @@ package com.ptumulty.notch.ChecklistUI;
 import com.ptumulty.ceramic.components.BooleanComponent;
 import com.ptumulty.ceramic.components.ListSelectionListener;
 import com.ptumulty.ceramic.models.BooleanModel;
-import com.ptumulty.notch.ChecklistUI.popups.CreateChecklistPopupWindow;
+import com.ptumulty.notch.ChecklistUI.popups.ConfigureChecklistPopupWindow;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -132,7 +132,8 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
         icon.setIconColor(Color.WHITE);
         createChecklistButton.setGraphic(icon);
         createChecklistButton.disableProperty().set(true);
-        createChecklistButton.setOnAction(event -> new CreateChecklistPopupWindow(checklistCategoryListItem));
+        createChecklistButton.setOnAction(event ->
+                new ConfigureChecklistPopupWindow(checklistCategoryListItem, Optional.empty()));
         controlBarContainer.setRight(createChecklistButton);
         BorderPane.setAlignment(createChecklistButton, Pos.CENTER);
         BorderPane.setMargin(createChecklistButton, new Insets(5, 10, 5, 10));
@@ -147,6 +148,7 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
     private void buildTable()
     {
         configureNameColumn();
+
         for (String taskName : columnMap.keySet())
         {
             if (columnMap.get(taskName) == null)
@@ -204,12 +206,13 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
 
     private void configureNameColumn()
     {
-        TableColumn<ChecklistTableItem, String> checklistNameColumn = new TableColumn<>("Item Name");
+        TableColumn<ChecklistTableItem, ChecklistTableItem> checklistNameColumn = new TableColumn<>("Item Name");
         checklistNameColumn.setEditable(false);
         checklistNameColumn.setReorderable(false);
         checklistNameColumn.setSortable(false);
         checklistNameColumn.setMinWidth(PREF_COLUMN_WIDTH);
-        checklistNameColumn.setCellValueFactory(param -> param.getValue().titleProperty());
+        checklistNameColumn.setCellValueFactory(TableColumn.CellDataFeatures::getValue);
+        checklistNameColumn.setCellFactory(param -> new ChecklistNameTableCell(checklistCategoryListItem));
         tableView.getColumns().add(checklistNameColumn);
     }
 
@@ -217,6 +220,44 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
     public void itemSelected(ChecklistCategoryListItemView selectedItem)
     {
         setChecklistCategoryListItem(selectedItem.getCategoryListItem());
+    }
+
+    private static class ChecklistNameTableCell extends TableCell<ChecklistTableItem, ChecklistTableItem>
+    {
+        private ChecklistCategoryListItem checklistCategoryListItem;
+
+        ChecklistNameTableCell(ChecklistCategoryListItem checklistCategoryListItem)
+        {
+            this.checklistCategoryListItem = checklistCategoryListItem;
+        }
+
+        @Override
+        protected void updateItem(ChecklistTableItem item, boolean empty)
+        {
+            super.updateItem(item, empty);
+
+            if (empty || item == null)
+            {
+                setText(null);
+                setGraphic(null);
+            }
+            else
+            {
+                Button button = new Button();
+                button.setOnAction(event -> new ConfigureChecklistPopupWindow(checklistCategoryListItem, Optional.of(item)));
+                button.setStyle("-fx-background-color: transparent; -fx-border-color: transparent");
+                FontIcon fontIcon = new FontIcon(FontAwesomeSolid.COG);
+                fontIcon.setIconColor(Color.WHITE);
+
+                HBox hBox = new HBox();
+                hBox.setAlignment(Pos.CENTER);
+                hBox.getChildren().add(button);
+                hBox.getChildren().add(new Label(item.getChecklist().getName().get()));
+
+                button.setGraphic(fontIcon);
+                setGraphic(hBox);
+            }
+        }
     }
 
     private static class CheckableTableCell extends TableCell<ChecklistTableItem, ChecklistTableItem>

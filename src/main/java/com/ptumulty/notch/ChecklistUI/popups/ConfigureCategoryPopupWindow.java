@@ -15,12 +15,12 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
-public class CreateCategoryPopupWindow
+public class ConfigureCategoryPopupWindow
 {
     private final TextArea defaultChecklistItems;
     private final TextField categoryNameField;
 
-    public CreateCategoryPopupWindow()
+    public ConfigureCategoryPopupWindow()
     {
         VBox vBox = new VBox();
         vBox.setSpacing(10);
