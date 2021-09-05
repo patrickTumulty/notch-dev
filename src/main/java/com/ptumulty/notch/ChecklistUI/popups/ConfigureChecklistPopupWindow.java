@@ -48,8 +48,10 @@ public class ConfigureChecklistPopupWindow
 
         for (String task : checklistCategoryListItem.getCategory().getCategoryTasksSnapshot())
         {
-            CheckableLabel checkableLabel = new CheckableLabel(task,checklistTableItem.isPresent() &&
-                                            checklistTableItem.get().getChecklist().getTaskState(task).isPresent());
+            CheckableLabel checkableLabel;
+            checkableLabel = checklistTableItem.map(tableItem ->
+                    new CheckableLabel(task, tableItem.getChecklist().getTaskState(task).isPresent())).orElseGet(() ->
+                    new CheckableLabel(task));
 
             tasks.add(checkableLabel);
             vBox.getChildren().add(checkableLabel);
