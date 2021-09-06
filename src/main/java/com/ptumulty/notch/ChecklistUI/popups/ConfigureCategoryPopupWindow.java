@@ -2,6 +2,7 @@ package com.ptumulty.notch.ChecklistUI.popups;
 
 import com.ptumulty.ceramic.ceramicfx.Action;
 import com.ptumulty.ceramic.ceramicfx.CancelableActionPopupWindow;
+import com.ptumulty.ceramic.utility.SetUtils;
 import com.ptumulty.ceramic.utility.StringUtils;
 import com.ptumulty.notch.AppContext;
 import com.ptumulty.notch.Checklist.Checklist;
@@ -139,7 +140,7 @@ public class ConfigureCategoryPopupWindow
         {
             taskSet.clear();
             taskSet.addAll(checklist.getTaskNamesSnapshot());
-            taskSet.removeAll(defaultTaskSet);
+            taskSet = SetUtils.difference(taskSet, defaultTaskSet);
             if (taskSet.size() > 0)
             {
                 checklist.removeTasks(new ArrayList<>(taskSet));
