@@ -11,6 +11,8 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.text.Text;
 
 import java.util.*;
 
@@ -28,6 +30,14 @@ public class ChecklistCategoryListView extends ListView<ChecklistCategoryListIte
         categoryModelToViewMap = new HashMap<>();
         listeners = new ArrayList<>();
 
+        getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+                listeners.forEach(listener -> listener.itemSelected(newValue)));
+
+        configureContextMenu();
+    }
+
+    private void configureContextMenu()
+    {
         ContextMenu contextMenu = new ContextMenu();
 
         MenuItem addChecklist = new MenuItem("Add Checklist");
@@ -37,7 +47,15 @@ public class ChecklistCategoryListView extends ListView<ChecklistCategoryListIte
         MenuItem newCategory = new MenuItem("New Category");
         newCategory.setOnAction(event -> new ConfigureCategoryPopupWindow());
 
-        MenuItem configure = new MenuItem("Configure"); // TODO Configure
+        MenuItem configure = new MenuItem("Configure");
+        configure.setOnAction(event ->
+        {
+            if (getSelectionModel().getSelectedItems().size() == 1)
+            {
+                new ConfigureCategoryPopupWindow(
+                        Optional.of(getSelectionModel().getSelectedItem().getCategoryListItem().getCategory()));
+            }
+        });
         MenuItem delete = new MenuItem("Delete"); // TODO Delete: Create warning popup
 
         contextMenu.getItems().addAll(List.of(addChecklist, new SeparatorMenuItem(), newCategory, configure, delete));
@@ -46,11 +64,17 @@ public class ChecklistCategoryListView extends ListView<ChecklistCategoryListIte
 
         setOnContextMenuRequested(event ->
         {
-            boolean contextOnListItem = !(event.getTarget() instanceof ChecklistCategoryListItemView);
+            boolean contextOnListItem = !isListItem(event);
             addChecklist.setDisable(contextOnListItem);
             configure.setDisable(contextOnListItem);
             delete.setDisable(contextOnListItem);
         });
+    }
+
+    private boolean isListItem(ContextMenuEvent event)
+    {
+        return event.getTarget() instanceof ChecklistCategoryListItemView ||
+               event.getTarget() instanceof Text;
     }
 
     @Override
@@ -58,7 +82,6 @@ public class ChecklistCategoryListView extends ListView<ChecklistCategoryListIte
     {
         ChecklistCategoryListItemView listItemView = new ChecklistCategoryListItemView(
                                                      new ChecklistCategoryListItem(categoryAdded));
-        listItemView.setOnMousePressed(event -> listeners.forEach(listener -> listener.itemSelected(listItemView)));
         categoryModelToViewMap.put(categoryAdded, listItemView);
         getItems().add(categoryModelToViewMap.get(categoryAdded));
         getSelectionModel().select(listItemView);

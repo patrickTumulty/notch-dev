@@ -75,6 +75,11 @@ public class Checklist
         listeners.forEach(ChecklistListener::checklistTasksChanged);
     }
 
+    public void removeTasks(List<String> tasks)
+    {
+        tasks.forEach(checklistTasks::remove);
+    }
+
     public void addTasks(List<String> taskNames)
     {
         taskNames.forEach(this::addTask);
