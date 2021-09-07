@@ -120,7 +120,7 @@ public class ConfigureCategoryPopupWindow
             checklistCategory.get().getCategoryTitleModel().setValue(getCategoryName());
             checklistCategory.get().setCategoryTasks(getDefaultTasks());
 
-            removeTasksFromChecklists();
+            removeTasksFromChecklists(checklistCategory.get());
         }
         else
         {
@@ -134,11 +134,11 @@ public class ConfigureCategoryPopupWindow
      *
      * Note: Each checklist can have a subset of the categories tasks
      */
-    private void removeTasksFromChecklists()
+    private void removeTasksFromChecklists(ChecklistCategory category)
     {
         Set<String> taskSet = new HashSet<>();
-        Set<String> defaultTaskSet = new HashSet<>(checklistCategory.get().getCategoryTasksSnapshot());
-        for (Checklist checklist : checklistCategory.get().getChecklists().get())
+        Set<String> defaultTaskSet = new HashSet<>(category.getCategoryTasksSnapshot());
+        for (Checklist checklist : category.getChecklists().get())
         {
             taskSet.clear();
             taskSet.addAll(checklist.getTaskNamesSnapshot());
