@@ -21,8 +21,8 @@ public class ConfigureCategoryPopupWindow
 {
     private TextArea defaultChecklistTasks;
     private TextField categoryNameField;
-    private Optional<ChecklistCategory> checklistCategory;
-    private VBox vBox;
+    private final Optional<ChecklistCategory> checklistCategory;
+    private final VBox uiComponentContainer;
 
     public ConfigureCategoryPopupWindow()
     {
@@ -33,10 +33,10 @@ public class ConfigureCategoryPopupWindow
     {
         this.checklistCategory = checklistCategory;
 
-        vBox = new VBox();
-        vBox.setSpacing(10);
-        vBox.setPadding(new Insets(10));
-        vBox.setAlignment(Pos.CENTER);
+        uiComponentContainer = new VBox();
+        uiComponentContainer.setSpacing(10);
+        uiComponentContainer.setPadding(new Insets(10));
+        uiComponentContainer.setAlignment(Pos.CENTER);
 
         configureNameField();
 
@@ -45,9 +45,11 @@ public class ConfigureCategoryPopupWindow
         Action<CancelableActionPopupWindow.ActionCanceledException> actionEvent =
                 this.checklistCategory.isPresent() ? this::configureCategory : this::createCategory;
 
-        CancelableActionPopupWindow popupWindow = new CancelableActionPopupWindow(vBox, "Create", actionEvent);
+        CancelableActionPopupWindow popupWindow =
+                new CancelableActionPopupWindow(
+                        uiComponentContainer, checklistCategory.isPresent() ? "Configure" : "Create", actionEvent);
         popupWindow.setStylesheet("css/main-stylesheet.css");
-        popupWindow.setWindowTitle("Checklist Category Creation");
+        popupWindow.setWindowTitle((checklistCategory.isPresent() ? "Configure" : "Create") + " Checklist Category");
         popupWindow.setActionButtonID("action-button");
         popupWindow.show(300, 300);
     }
@@ -66,7 +68,7 @@ public class ConfigureCategoryPopupWindow
             defaultChecklistTasks.setText(stringBuilder.toString());
         }
 
-        vBox.getChildren().add(defaultChecklistTasks);
+        uiComponentContainer.getChildren().add(defaultChecklistTasks);
     }
 
     private void configureNameField()
@@ -74,7 +76,7 @@ public class ConfigureCategoryPopupWindow
         categoryNameField = new TextField(this.checklistCategory.isPresent() ?
                                           this.checklistCategory.get().getCategoryTitle() : "");
         categoryNameField.setPromptText("Category Title...");
-        vBox.getChildren().add(categoryNameField);
+        uiComponentContainer.getChildren().add(categoryNameField);
     }
 
     private void createCategory() throws CancelableActionPopupWindow.ActionCanceledException
