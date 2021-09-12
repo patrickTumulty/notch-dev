@@ -49,6 +49,12 @@ public class ChecklistCategoryManagerImpl implements ChecklistCategoryManager
     }
 
     @Override
+    public List<ChecklistCategory> getAllChecklistCategories()
+    {
+        return new ArrayList<>(checklistCategoriesMap.values());
+    }
+
+    @Override
     public void removeChecklistCategory(String name)
     {
         notifyCategoryRemoved(checklistCategoriesMap.get(name));

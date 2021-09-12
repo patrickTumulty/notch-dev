@@ -11,17 +11,13 @@ public class ChecklistCategory
 {
     private final StringModel categoryTitle;
     private final ListModel<Checklist> checklists;
-
     private final ListModel<String> defaultChecklistTasks;
-    private final ListModel<String> additionalChecklistItems;
 
     public ChecklistCategory(String categoryTitle)
     {
         this.categoryTitle = new StringModel(categoryTitle);
         checklists = new ListModel<>();
-
         defaultChecklistTasks = new ListModel<>();
-        additionalChecklistItems = new ListModel<>();
     }
 
     public void setCategoryTasks(List<String> items)
@@ -29,19 +25,9 @@ public class ChecklistCategory
         defaultChecklistTasks.setList(items);
     }
 
-    public void addAdditionalChecklistItems(List<String> items)
-    {
-        additionalChecklistItems.addItems(items);
-    }
-
     public List<String> getCategoryTasksSnapshot()
     {
         return new ArrayList<>(List.copyOf(defaultChecklistTasks.getItemsSnapshot()));
-    }
-
-    public List<String> getAdditionalChecklistItemsSnapshot()
-    {
-        return new ArrayList<>(List.copyOf(additionalChecklistItems.getItemsSnapshot()));
     }
 
     public String getCategoryTitle()
