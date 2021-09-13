@@ -1,10 +1,12 @@
 package com.ptumulty.notch.ChecklistUI;
 
 import com.ptumulty.ceramic.components.BooleanComponent;
-import com.ptumulty.ceramic.components.ListSelectionListener;
 import com.ptumulty.ceramic.models.BooleanModel;
+import com.ptumulty.ceramic.models.ListModel;
+import com.ptumulty.notch.ChecklistUI.popups.ConfigureCategoryPopupWindow;
 import com.ptumulty.notch.ChecklistUI.popups.ConfigureChecklistPopupWindow;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -19,37 +21,104 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class ExtendedChecklistTableView extends BorderPane implements ListSelectionListener<ChecklistCategoryListItemView>
+public class ExtendedChecklistTableView extends BorderPane implements ListModel.ListModelListener<String>
 {
     private final int PREF_COLUMN_WIDTH = 75;
 
-    private final Map<String, TableColumn<ChecklistTableItem, ChecklistTableItem>> columnMap;
+    private final Map<String, TableColumn<ChecklistTableItem, ChecklistTableItem>> taskColumnMap;
     private final TableView<ChecklistTableItem> tableView;
     private ChecklistCategoryListItem checklistCategoryListItem;
     private Button createChecklistButton;
-    private HBox controlBar;
-    private BorderPane controlBarContainer;
+    private Button createCategoryButton;
+    private Button configureCategoryButton;
+    private HBox controlBarLeft;
+    private HBox controlBarRight;
     private TextField filterField;
     private ChoiceBox<VisibilityOptions> visibilityOptions;
+    private ChecklistCategoryChoiceBox checklistCategorySelect;
+
 
     public ExtendedChecklistTableView()
     {
-        columnMap = new HashMap<>();
+        taskColumnMap = new HashMap<>();
         tableView = new TableView<>();
         tableView.setFixedCellSize(35);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tableView.setPlaceholder(new Label("No Category Selected"));
 
+        configureControlbar();
+
         setCenter(tableView);
         BorderPane.setAlignment(tableView, Pos.CENTER);
-
-        configureControlBar();
 
         configureFilterField();
 
         configureVisibilityOption();
 
+        configureCategorySelectChoiceBox();
+
+        configureConfigureCategoryButton();
+
+        configureCreateCategoryButton();
+
+        controlBarRight.getChildren().add(new Separator(Orientation.VERTICAL));
+
         configureCreateChecklistButton();
+    }
+
+    private void configureConfigureCategoryButton()
+    {
+        configureCategoryButton = new Button();
+        configureCategoryButton.disableProperty().set(true);
+        FontIcon fontIcon = new FontIcon(FontAwesomeSolid.COG);
+        fontIcon.setIconSize(20);
+        fontIcon.setIconColor(Color.WHITE);
+        configureCategoryButton.setGraphic(fontIcon);
+        configureCategoryButton.setOnAction(event ->
+                new ConfigureCategoryPopupWindow(Optional.of(checklistCategoryListItem.getCategory())));
+        controlBarRight.getChildren().add(configureCategoryButton);
+    }
+
+    private void configureCategorySelectChoiceBox()
+    {
+        checklistCategorySelect = new ChecklistCategoryChoiceBox();
+        checklistCategorySelect.getSelectionModel()
+                               .selectedItemProperty()
+                               .addListener((observable, oldValue, newValue) ->
+                                       setChecklistCategoryListItem(newValue));
+        controlBarRight.getChildren().add(checklistCategorySelect);
+    }
+
+    private void configureCreateCategoryButton()
+    {
+        createCategoryButton = new Button();
+        createCategoryButton.setOnAction(event -> new ConfigureCategoryPopupWindow());
+        FontIcon fontIcon = new FontIcon(FontAwesomeSolid.FOLDER_PLUS);
+        fontIcon.setIconSize(20);
+        fontIcon.setIconColor(Color.WHITE);
+        createCategoryButton.setGraphic(fontIcon);
+        controlBarRight.getChildren().add(createCategoryButton);
+    }
+
+    private void configureControlbar()
+    {
+        controlBarLeft = new HBox();
+        controlBarLeft.setAlignment(Pos.CENTER_LEFT);
+        controlBarLeft.setPadding(new Insets(5, 10, 5, 10));
+        controlBarLeft.setSpacing(10);
+
+        controlBarRight = new HBox();
+        controlBarRight.setAlignment(Pos.CENTER_RIGHT);
+        controlBarRight.setPadding(new Insets(5, 10, 5, 10));
+        controlBarRight.setSpacing(10);
+
+        BorderPane controlBarContainer = new BorderPane();
+        setTop(controlBarContainer);
+
+        controlBarContainer.setLeft(controlBarLeft);
+        controlBarContainer.setRight(controlBarRight);
+        BorderPane.setAlignment(controlBarLeft, Pos.CENTER);
+        BorderPane.setAlignment(controlBarRight, Pos.CENTER);
     }
 
     private void configureVisibilityOption()
@@ -68,7 +137,7 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
 
             checklistCategoryListItem.getFilterChecklists().setPredicate(getCombinedPredicate());
         });
-        controlBar.getChildren().add(visibilityOptions);
+        controlBarLeft.getChildren().add(visibilityOptions);
     }
 
     private void configureFilterField()
@@ -84,7 +153,7 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
 
             checklistCategoryListItem.getFilterChecklists().setPredicate(getCombinedPredicate());
         });
-        controlBar.getChildren().add(filterField);
+        controlBarLeft.getChildren().add(filterField);
     }
 
     private Predicate<ChecklistTableItem> getCombinedPredicate()
@@ -111,19 +180,6 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
         return tableItem -> filterFieldPredicate.test(tableItem) && visibilityPredicate.test(tableItem);
     }
 
-    private void configureControlBar()
-    {
-        controlBar = new HBox();
-        controlBarContainer = new BorderPane();
-        controlBarContainer.setCenter(controlBar);
-
-        controlBar.setAlignment(Pos.CENTER_LEFT);
-        controlBar.setPadding(new Insets(5, 10, 5, 10));
-        controlBar.setSpacing(10);
-        BorderPane.setAlignment(controlBar, Pos.CENTER);
-        setTop(controlBarContainer);
-    }
-
     private void configureCreateChecklistButton()
     {
         createChecklistButton = new Button();
@@ -134,31 +190,30 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
         createChecklistButton.disableProperty().set(true);
         createChecklistButton.setOnAction(event ->
                 new ConfigureChecklistPopupWindow(checklistCategoryListItem, Optional.empty()));
-        controlBarContainer.setRight(createChecklistButton);
-        BorderPane.setAlignment(createChecklistButton, Pos.CENTER);
-        BorderPane.setMargin(createChecklistButton, new Insets(5, 10, 5, 10));
+
+        controlBarRight.getChildren().add(createChecklistButton);
     }
 
     private void disposeTable()
     {
         tableView.getColumns().clear();
-        columnMap.clear();
+        taskColumnMap.clear();
     }
 
     private void buildTable()
     {
         configureNameColumn();
 
-        for (String taskName : columnMap.keySet())
+        for (String taskName : taskColumnMap.keySet())
         {
-            if (columnMap.get(taskName) == null)
+            if (taskColumnMap.get(taskName) == null)
             {
-                configureTaskColumns(taskName);
+                configureTaskColumn(taskName);
             }
         }
     }
 
-    private void configureTaskColumns(String taskName)
+    private void configureTaskColumn(String taskName)
     {
         TableColumn<ChecklistTableItem, ChecklistTableItem> checklistTaskColumn = new TableColumn<>(taskName);
         checklistTaskColumn.setSortable(false);
@@ -166,14 +221,22 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
         checklistTaskColumn.setCellValueFactory(TableColumn.CellDataFeatures::getValue);
         checklistTaskColumn.setCellFactory(param -> new CheckableTableCell(taskName));
         tableView.getColumns().add(checklistTaskColumn);
-        columnMap.put(taskName, checklistTaskColumn);
+        taskColumnMap.put(taskName, checklistTaskColumn);
     }
 
     public void setChecklistCategoryListItem(ChecklistCategoryListItem checklistCategoryListItem)
     {
         if (this.checklistCategoryListItem != checklistCategoryListItem)
         {
+            if (this.checklistCategoryListItem != null)
+            {
+                this.checklistCategoryListItem.getCategory().getDefaultChecklistTasksModel().removeListener(this);
+            }
+
             this.checklistCategoryListItem = checklistCategoryListItem;
+
+            this.checklistCategoryListItem.getCategory().getDefaultChecklistTasksModel().addListener(this);
+
             onContextChange(this.checklistCategoryListItem);
         }
     }
@@ -189,18 +252,21 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
         tableView.setPlaceholder(new Label("Table Is Empty"));
 
         createChecklistButton.disableProperty().set(false);
+        configureCategoryButton.disableProperty().set(false);
 
         tableView.setItems(checklistCategoryListItem.getFilterChecklists());
+    }
+
+    private void reloadTable()
+    {
+        onContextChange(checklistCategoryListItem);
     }
 
     private void assembleTaskColumns()
     {
         for (String task : checklistCategoryListItem.getCategory().getCategoryTasksSnapshot())
         {
-            if (!columnMap.containsKey(task))
-            {
-                columnMap.put(task, null);
-            }
+            addTaskToTaskColumnMap(task);
         }
     }
 
@@ -216,10 +282,35 @@ public class ExtendedChecklistTableView extends BorderPane implements ListSelect
         tableView.getColumns().add(checklistNameColumn);
     }
 
-    @Override
-    public void itemSelected(ChecklistCategoryListItemView selectedItem)
+    private void addTaskToTaskColumnMap(String item)
     {
-        setChecklistCategoryListItem(selectedItem.getCategoryListItem());
+        if (!taskColumnMap.containsKey(item))
+        {
+            taskColumnMap.put(item, null);
+        }
+    }
+
+    @Override
+    public void itemAdded(String item)
+    {
+        addTaskToTaskColumnMap(item);
+        configureTaskColumn(item);
+    }
+
+    @Override
+    public void itemRemoved(String item)
+    {
+        if (taskColumnMap.containsKey(item))
+        {
+            tableView.getColumns().remove(taskColumnMap.get(item));
+            taskColumnMap.remove(item);
+        }
+    }
+
+    @Override
+    public void listChanged()
+    {
+        reloadTable();
     }
 
     private static class ChecklistNameTableCell extends TableCell<ChecklistTableItem, ChecklistTableItem>

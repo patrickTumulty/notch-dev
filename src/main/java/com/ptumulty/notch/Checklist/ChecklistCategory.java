@@ -25,6 +25,11 @@ public class ChecklistCategory
         defaultChecklistTasks.setList(items);
     }
 
+    public ListModel<String> getDefaultChecklistTasksModel()
+    {
+        return defaultChecklistTasks;
+    }
+
     public List<String> getCategoryTasksSnapshot()
     {
         return new ArrayList<>(List.copyOf(defaultChecklistTasks.getItemsSnapshot()));

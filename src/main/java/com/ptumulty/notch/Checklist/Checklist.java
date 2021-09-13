@@ -77,7 +77,7 @@ public class Checklist
 
     public void removeTasks(List<String> tasks)
     {
-        tasks.forEach(checklistTasks::remove);
+        tasks.forEach(this::removeTask);
     }
 
     public void addTasks(List<String> taskNames)

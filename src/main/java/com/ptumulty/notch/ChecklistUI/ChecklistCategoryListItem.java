@@ -85,4 +85,10 @@ public class ChecklistCategoryListItem
     {
         return filterChecklists;
     }
+
+    @Override
+    public String toString()
+    {
+        return getCategoryTitle();
+    }
 }
