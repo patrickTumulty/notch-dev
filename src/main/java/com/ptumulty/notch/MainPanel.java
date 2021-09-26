@@ -1,5 +1,6 @@
 package com.ptumulty.notch;
 
+import com.ptumulty.ceramic.models.ValueModel;
 import com.ptumulty.notch.Checklist.Checklist;
 import com.ptumulty.notch.Checklist.ChecklistCategory;
 import com.ptumulty.notch.Checklist.ChecklistCategoryManager;

@@ -15,6 +15,7 @@ public class NotchApplication extends Application
     public void start(Stage primaryStage)
     {
         Scene scene = new Scene(new MainPanel());
+//        Scene scene = new Scene(new CheckableRegion());
         scene.getStylesheets().add("css/main-stylesheet.css");
         scene.getStylesheets().add("css/table-view-stylesheet.css");
         scene.getStylesheets().add("css/list-view-stylesheet.css");

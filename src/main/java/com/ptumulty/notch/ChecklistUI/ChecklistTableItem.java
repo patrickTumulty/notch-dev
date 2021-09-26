@@ -3,6 +3,8 @@ package com.ptumulty.notch.ChecklistUI;
 import com.ptumulty.ceramic.components.BooleanComponent;
 import com.ptumulty.ceramic.models.BooleanModel;
 import com.ptumulty.notch.Checklist.Checklist;
+import com.ptumulty.notch.CustomComponents.CheckableRegion;
+import com.ptumulty.notch.CustomComponents.CheckableRegionComponent;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValueBase;
@@ -14,7 +16,7 @@ import java.util.Optional;
 public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem> implements Checklist.ChecklistListener
 {
     private final StringProperty title;
-    private final Map<String, BooleanComponent> checklistTasks;
+    private final Map<String, CheckableRegionComponent> checklistTasks;
     public Checklist checklist;
 
     public ChecklistTableItem(Checklist checklist)
@@ -40,7 +42,7 @@ public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem> 
     private void createAndAddTaskComponent(String itemName)
     {
         Optional<BooleanModel> checkedState = checklist.getTaskState(itemName);
-        checkedState.ifPresent(booleanModel -> checklistTasks.put(itemName, new BooleanComponent(booleanModel)));
+        checkedState.ifPresent(booleanModel -> checklistTasks.put(itemName, new CheckableRegionComponent(booleanModel)));
     }
 
     public StringProperty titleProperty()
@@ -53,7 +55,7 @@ public class ChecklistTableItem extends ObservableValueBase<ChecklistTableItem> 
         return checklist;
     }
 
-    public Optional<BooleanComponent> getTaskBooleanComponent(String taskName)
+    public Optional<CheckableRegionComponent> getTaskBooleanComponent(String taskName)
     {
         return Optional.ofNullable(checklistTasks.get(taskName));
     }

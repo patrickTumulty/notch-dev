@@ -5,6 +5,8 @@ import com.ptumulty.ceramic.models.BooleanModel;
 import com.ptumulty.ceramic.models.ListModel;
 import com.ptumulty.notch.ChecklistUI.popups.ConfigureCategoryPopupWindow;
 import com.ptumulty.notch.ChecklistUI.popups.ConfigureChecklistPopupWindow;
+import com.ptumulty.notch.CustomComponents.CheckableRegion;
+import com.ptumulty.notch.CustomComponents.CheckableRegionComponent;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -372,23 +374,25 @@ public class ExtendedChecklistTableView extends BorderPane implements ListModel.
             }
             else
             {
-                Optional<BooleanComponent> booleanComponent = item.getTaskBooleanComponent(name);
-                if (booleanComponent.isPresent())
+                Optional<CheckableRegionComponent> checkableRegionComponent = item.getTaskBooleanComponent(name);
+                if (checkableRegionComponent.isPresent())
                 {
-                    this.setOnMouseClicked(event ->
-                    {
-                        if (item.getChecklist().getTaskState(name).isPresent())
-                        {
-                            BooleanModel booleanModel = item.getChecklist().getTaskState(name).get();
-                            boolean currentState = booleanModel.get();
-                            booleanModel.setValue(!currentState);
-                        }
-                    });
-                    setGraphic(booleanComponent.get().getRenderer());
+//                    this.setOnMouseClicked(event ->
+//                    {
+//                        if (item.getChecklist().getTaskState(name).isPresent())
+//                        {
+//                            BooleanModel booleanModel = item.getChecklist().getTaskState(name).get();
+//                            boolean currentState = booleanModel.get();
+//                            booleanModel.setValue(!currentState);
+//                        }
+//                    });
+                    setGraphic(checkableRegionComponent.get().getRenderer());
                 }
                 else
                 {
-                    setGraphic(new Label("n/a"));
+                    CheckableRegion checkableRegion = new CheckableRegion();
+                    checkableRegion.setActive(false);
+                    setGraphic(checkableRegion);
                 }
             }
         }
