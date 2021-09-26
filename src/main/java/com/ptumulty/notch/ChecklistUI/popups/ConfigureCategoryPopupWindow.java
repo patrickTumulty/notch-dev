@@ -4,7 +4,6 @@ import com.ptumulty.ceramic.ceramicfx.Action;
 import com.ptumulty.ceramic.ceramicfx.CancelableActionPopupWindow;
 import com.ptumulty.ceramic.utility.SetUtils;
 import com.ptumulty.ceramic.utility.StringUtils;
-import com.ptumulty.notch.AppContext;
 import com.ptumulty.notch.Checklist.Checklist;
 import com.ptumulty.notch.Checklist.ChecklistCategory;
 import com.ptumulty.notch.Checklist.ChecklistCategoryManager;
@@ -14,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import org.openide.util.Lookup;
 
 import java.util.*;
 
@@ -91,7 +91,7 @@ public class ConfigureCategoryPopupWindow
                 throw new CancelableActionPopupWindow.ActionCanceledException("Task list is empty.");
             }
             checklistCategory.setCategoryTasks(defaults);
-            AppContext.get().getBean(ChecklistCategoryManager.class).addChecklistCategory(checklistCategory);
+            Lookup.getDefault().lookup(ChecklistCategoryManager.class).addChecklistCategory(checklistCategory);
         }
         catch (ChecklistCategoryManagerImpl.CategoryAlreadyExistsException e)
         {

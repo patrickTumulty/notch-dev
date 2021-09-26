@@ -1,9 +1,9 @@
 package com.ptumulty.notch.ChecklistUI;
 
-import com.ptumulty.notch.AppContext;
 import com.ptumulty.notch.Checklist.ChecklistCategory;
 import com.ptumulty.notch.Checklist.ChecklistCategoryManager;
 import javafx.scene.control.ChoiceBox;
+import org.openide.util.Lookup;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ public class ChecklistCategoryChoiceBox extends ChoiceBox<ChecklistCategoryListI
     {
         listItems = new HashMap<>();
 
-        AppContext.get().getBean(ChecklistCategoryManager.class).addListener(new ChecklistCategoryManager.ChecklistManagerListener()
+        Lookup.getDefault().lookup(ChecklistCategoryManager.class).addListener(new ChecklistCategoryManager.ChecklistManagerListener()
         {
             @Override
             public void checklistCategoryAdded(ChecklistCategory categoryAdded)

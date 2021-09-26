@@ -10,7 +10,7 @@ public class Checklist
 {
     private final StringModel name;
     private final Map<String, BooleanModel> checklistTasks;
-    private final LocalDate dateCreated;
+    private LocalDate dateCreated;
     private final BooleanModel isCompleted;
     private List<ChecklistListener> listeners;
 
@@ -32,6 +32,11 @@ public class Checklist
     public LocalDate getDateCreated()
     {
         return dateCreated;
+    }
+
+    public void setDateCreated(LocalDate dateCreated)
+    {
+        this.dateCreated = dateCreated;
     }
 
     public StringModel getName()

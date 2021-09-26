@@ -1,34 +1,21 @@
 plugins {
     id 'application'
-    id 'org.springframework.boot' version '2.5.3'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
-    id 'org.springframework.experimental.aot' version '0.10.2'
-    id 'org.graalvm.buildtools.native' version '0.9.1'
     id "org.openjfx.javafxplugin" version "0.0.10"
 }
 
 group = 'com.ptumulty'
 version = '0.0.1-SNAPSHOT'
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
 repositories {
-    maven { url 'https://repo.spring.io/release' }
     mavenCentral()
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:2.5.4'
     compileOnly 'org.projectlombok:lombok:1.18.20'
-//    developmentOnly 'org.springframework.boot:spring-boot-devtools:2.5.4'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.5.4'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
+
+    implementation 'org.netbeans.api:org-openide-util-lookup:RELEASE125'
 
     implementation 'org.kordamp.ikonli:ikonli-javafx:12.2.0'
     implementation 'org.kordamp.ikonli:ikonli-carbonicons-pack:12.2.0'
@@ -39,10 +26,6 @@ dependencies {
     implementation project("modules:ceramic-dev")
 }
 
-springBoot {
-    mainClass = "com.ptumulty.notch.NotchApplication"
-}
-
 test {
     useJUnitPlatform()
 }
@@ -50,15 +33,6 @@ test {
 javafx {
     version = '15.0.1'
     modules = ['javafx.controls']
-}
-
-bootBuildImage {
-    builder = 'paketobuildpacks/builder:tiny'
-    environment = ['BP_NATIVE_IMAGE': 'true']
-}
-
-nativeBuild {
-    classpath "$buildDir/resources/aot", "$buildDir/classes/java/aot"
 }
 
 mainClassName = 'com.ptumulty.notch.NotchApplication'

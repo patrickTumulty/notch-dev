@@ -7,7 +7,9 @@ import com.ptumulty.notch.Checklist.ChecklistCategoryManagerImpl;
 import com.ptumulty.notch.ChecklistUI.ExtendedChecklistTableView;
 import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
+import org.openide.util.Lookup;
 
+import javax.swing.*;
 import java.util.List;
 
 public class MainPanel extends BorderPane
@@ -19,6 +21,7 @@ public class MainPanel extends BorderPane
 
     private final ExtendedChecklistTableView extendedChecklistTableView;
 
+
     MainPanel()
     {
         extendedChecklistTableView = new ExtendedChecklistTableView();
@@ -29,7 +32,7 @@ public class MainPanel extends BorderPane
 
         configureLayout();
 
-//        DEV();
+        DEV();
     }
 
     private void DEV()
@@ -45,11 +48,12 @@ public class MainPanel extends BorderPane
 
         try
         {
-            AppContext.get().getBean(ChecklistCategoryManager.class).addChecklistCategory(category);
-        }
-        catch (ChecklistCategoryManagerImpl.CategoryAlreadyExistsException ignored)
+            Lookup.getDefault().lookup(ChecklistCategoryManager.class).addChecklistCategory(category);
+        } catch (ChecklistCategoryManagerImpl.CategoryAlreadyExistsException e)
         {
-
+            /*
+             * Do Nothing
+             */
         }
     }
 
